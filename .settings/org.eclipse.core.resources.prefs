@@ -1,0 +1,9 @@
+eclipse.preferences.version=1
+encoding//src/controle/controle_analise.py=utf8
+encoding//src/controle/controle_cria_campo.py=utf-8
+encoding//src/controle/controle_gerar_matriz.py=utf-8
+encoding//src/ui/view_analise.py=utf-8
+encoding//src/ui/view_cria_campos.py=utf-8
+encoding//src/ui/view_gerador.py=utf-8
+encoding//src/ui/view_main.py=utf-8
+encoding//src/utils/Constants.py=utf-8
