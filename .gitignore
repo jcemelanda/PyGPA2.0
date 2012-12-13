@@ -1,0 +1,5 @@
+*.pyc
+*.pyo
+*~
+src/deploy/build
+src/deploy/dist
