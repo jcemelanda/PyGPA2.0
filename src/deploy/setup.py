@@ -4,11 +4,13 @@ from os import popen
 
 YUM_STRING = 'yum install python-imaging python-matplotlib PyQt4 -y'
 APT_PIP = 'apt-get install python-pip libpng* libfreetype* PyQt4* && pip install matplotlib'
-PIP = 'pip install '
+PIP = 'pip install matplotlib PIL'
 if 'Red Hat' in version:
     string = YUM_STRING
-elif 'Debian' in version:
+elif ('Debian' in version) or ('Ubuntu' in version) :
     string = APT_PIP
+else:
+    string = PIP
 
 popen(string)
 setup(name='PyGPA',
