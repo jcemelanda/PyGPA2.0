@@ -1,23 +1,46 @@
 # -*- coding:utf-8 -*-
+#==================================Imports=====================================#
+
+# Componentes PyQt4
 from PyQt4 import QtGui, QtCore
+
+# Componentes Matplotlib
 from matplotlib import tri
-from matplotlib.backends.backend_qt4agg import FigureCanvasQTAgg as FigureWidget, \
-    NavigationToolbar2QTAgg as Navbar
+from matplotlib.backends.backend_qt4agg import FigureCanvasQTAgg \
+    as FigureWidget, NavigationToolbar2QTAgg as Navbar
 from matplotlib.figure import Figure
+
+# Componentes internos
 from view.view_analisys import Analise_View
 from widgets.widget_detail import Detail_widget
 from widgets.widget_graphs import Grafics_widget
+
+# PIL
 import Image
+
+# Standard Library
 import time
 
+#=======================Preparação de ambiente da classe=======================#
 
+# Configura conversão pra Unicode
 try:
     _fromUtf8 = QtCore.QString.fromUtf8
 except AttributeError:
     _fromUtf8 = lambda s: s
 
+
 class Analise_Ctrl:
+    '''
+    Controla o funcionamento do módulo de análise de gradientes
+    '''
     def __init__(self, mat=[]):
+        '''
+        Inicializa os atributos e variáveis da classe
+        params:
+            mat -> list
+                Opcional - lista de campos de gradientes que serão análisados
+        '''
         self.ui = Analise_View(self)
         self.ui.showMaximized()
         self.matrizes = mat
@@ -27,20 +50,24 @@ class Analise_Ctrl:
         self.figuras_GA = []
         self.pos = 0
         self.current_tab = 0
-        if len(self.matrizes)>0:
+        if len(self.matrizes) > 0:
             self.ABERTURA = 'direta'
             self.normalizado = False
         else:
             self.ABERTURA = 'normal'
         
     def incrementa_view(self):
+        '''
+        Muda o conjunto de dados sendo exibido para o próximo da ‭lista
+        '''
+        
         print 'incremented'
         self.pos += 1
-        if self.current_tab==0:
+        if self.current_tab == 0:
             self.ui.ui.stackedGraphics.setCurrentIndex(self.pos)
-        elif self.current_tab==1:
+        elif self.current_tab == 1:
             self.ui.ui.stackedVet.setCurrentIndex(self.pos)
-        elif self.current_tab==2:
+        elif self.current_tab == 2:
             self.ui.ui.stackedTriang.setCurrentIndex(self.pos)
         else:
             self.ui.ui.stackedGPA.setCurrentIndex(self.pos)
@@ -48,17 +75,28 @@ class Analise_Ctrl:
         time.sleep(.10)
     
     def set_current_tab(self, tab):
+        '''
+        Ajusta a aba que deve ser exibida
+        params: 
+            tab -> int 
+                indice da aba que será exibida
+        '''
+        
         self.current_tab = tab
         self.set_view(self.pos)
         
     def decrementa_view(self):
+        '''
+        Muda o conjunto de dados sendo exibido para o anterior da ‭lista
+        '''
+        
         print 'decremented'
         self.pos -= 1
-        if self.current_tab==0:
+        if self.current_tab == 0:
             self.ui.ui.stackedGraphics.setCurrentIndex(self.pos)
-        elif self.current_tab==1:
+        elif self.current_tab == 1:
             self.ui.ui.stackedVet.setCurrentIndex(self.pos)
-        elif self.current_tab==2:
+        elif self.current_tab == 2:
             self.ui.ui.stackedTriang.setCurrentIndex(self.pos)
         else:
             self.ui.ui.stackedGPA.setCurrentIndex(self.pos)
@@ -66,8 +104,11 @@ class Analise_Ctrl:
         time.sleep(.10)
                 
     def last_view(self):
+        '''
+        Muda a exibição para o último conjunto da ‭lista
+        '''
         print 'last'
-        self.pos = self.ui.ui.stackedGraphics.count()-1
+        self.pos = self.ui.ui.stackedGraphics.count() - 1
         self.ui.ui.stackedGraphics.setCurrentIndex(self.pos)
         self.ui.ui.stackedVet.setCurrentIndex(self.pos)
         self.ui.ui.stackedTriang.setCurrentIndex(self.pos)
@@ -75,6 +116,9 @@ class Analise_Ctrl:
         self.ui.ui.horizontalSlider.setValue(self.pos)
     
     def first_view(self):
+        '''
+        Muda a exibição para o prieiro conjunto da ‭lista
+        '''
         print 'first'
         self.pos = 0
         self.ui.ui.stackedGraphics.setCurrentIndex(self.pos)
@@ -85,7 +129,15 @@ class Analise_Ctrl:
         time.sleep(.10)
                 
     def set_view(self, pos):
-        print 'set '+str(pos)
+        '''
+        Ajusta a posição da ‭lista de dados para a posição passada como
+        parâmetro
+        params:
+            pos -> int
+                Posição da ‭lista que será exibida
+        '''
+        
+        print 'set ' + str(pos)
         self.pos = pos
         self.ui.ui.stackedGraphics.setCurrentIndex(self.pos)
         self.ui.ui.stackedVet.setCurrentIndex(self.pos)
@@ -96,11 +148,8 @@ class Analise_Ctrl:
                 
     def abrir_arquivo(self):
         '''
-        abrir_arquivo -> None
-        
         Abre um arquivo contendo uma matriz bidimensional de dados ou uma 
-        imagem e gera a matriz de dados interna do programa.        
-        
+        imagem e gera a matriz de dados interna do programa
         '''
         
         self.figuras_vet = []
@@ -109,9 +158,9 @@ class Analise_Ctrl:
         self.normalizado = False
         self.matrizes = []
         fd = QtGui.QFileDialog()
-        file_path = fd.getOpenFileName(parent = None,
-                                caption = u'Abrir arquivo',
-        filter = u'Dados textuais (*.txt *.dat);;Imagens (*.png *.bmp *.jpg)')
+        file_path = fd.getOpenFileName(parent=None,
+                                caption=u'Abrir arquivo',
+        filter=u'Dados textuais (*.txt *.dat);;Imagens (*.png *.bmp *.jpg)')
         if file_path[-3:] in ['png', 'jpg', 'bmp']:
             try:
                 im = Image.open(str(file_path), 'r')
@@ -177,6 +226,10 @@ class Analise_Ctrl:
         
         
     def processa_matrizes(self):
+        '''
+        Opera sobre o conjunto de matrizes gerando os vetores, 
+        triangulações e widgets
+        '''
         for mat in self.matrizes:
             self.matriz = mat[:]
             self.gerar_vetores()
@@ -185,6 +238,10 @@ class Analise_Ctrl:
         self.gerar_widgets()
         
     def gerar_grafico_GA(self):
+        '''
+        Gera o gráfico de graus de assimetria dos conjuntos de dados
+        '''
+        
         for i in range(len(self.matrizes)):
             self.figuras_GA.append(Figure(dpi=120))
             axes = self.figuras_GA[-1].add_subplot(111)
@@ -193,14 +250,14 @@ class Analise_Ctrl:
             
     def get_dx(self):
         '''
-        get_dx -> list
-        
-        Gera uma matriz com as derivadas parciais em x para a matriz de dados
-        lida
-        
-        
+        Gera uma matriz com as derivadas parciais em x para a matriz de
+        dados lida
+        return:
+            mat -> list
+                lista que contém as matrizes de derivadas parciais em x
         '''
-        if self.ABERTURA=='normal':
+        
+        if self.ABERTURA == 'normal':
             dx = []
             dlg = QtGui.QProgressDialog(u'Calculando dx', u'Cancelar',
                                         0, len(self.matriz[:-1]))
@@ -236,14 +293,13 @@ class Analise_Ctrl:
 
     def get_dy(self):
         '''
-        get_dy -> list
-        
-        Gera uma matriz com as derivadas parciais em y para a matriz de dados
-        lida
-        
-        
+        Gera uma matriz com as derivadas parciais em y para a matriz de
+        dados lida
+        return:
+            mat -> list
+                lista que contém as matrizes de derivadas parciais em x
         '''
-        if self.ABERTURA=='normal':
+        if self.ABERTURA == 'normal':
             dy = []
             dlg = QtGui.QProgressDialog(u'Calculando dy', u'Cancelar',
                                         0, len(self.matriz[:-1]))
@@ -278,7 +334,10 @@ class Analise_Ctrl:
             return mat
         
     def normaliza_derivadas(self):
-
+        '''
+        Normaliza as derivadas em função do maior valor que se tornará 1
+        Todos os valores passam a ter norma entre 0 e 1 inclusive
+        '''
         if self.normalizado:
             return
 
@@ -297,11 +356,8 @@ class Analise_Ctrl:
       
     def gerar_vetores(self):
         '''
-        gerar_vetores -> None
-        
-        gera o campo de gradientes do conjunto de dados a partir das derivadas 
-        parciais em x e y de cada elemento do conjunto.        
-        
+        Gera o campo de gradientes do conjunto de dados a partir das derivadas 
+        parciais em x e y de cada elemento do conjunto
         '''
         self.dx = self.get_dx()
         self.dy = self.get_dy()
@@ -314,20 +370,17 @@ class Analise_Ctrl:
         miny = -1
         maxy = round(max(self.dy[-1]))
 
-        self.figuras_vet.append(Figure(dpi = 120))
-        axes = self.figuras_vet[-1].add_subplot(111, aspect = 'equal')
-        q = axes.quiver(self.dx, self.dy, angles = 'xy', scale = 1.0,
-                                scale_units = 'xy', minshaft = 2, minlength = 1)
-        axes.quiverkey(q, 0, miny - 2, 1, '', coordinates = 'data')
+        self.figuras_vet.append(Figure(dpi=120))
+        axes = self.figuras_vet[-1].add_subplot(111, aspect='equal')
+        q = axes.quiver(self.dx, self.dy, angles='xy', scale=1.0,
+                                scale_units='xy', minshaft=2, minlength=1)
+        axes.quiverkey(q, 0, miny - 2, 1, '', coordinates='data')
         axes.set_xlim(minx, len(self.dx[0]) + maxx)
         axes.set_ylim(miny, len(self.dx) + maxy)
         
     def anular(self):
         '''
-        anular -> None
-        
-        Coloca norma zero para os pares de vetores que se anulam.        
-        
+        Coloca norma zero para os pares de vetores que se anulam.
         '''
         vects = [zip(x, y) for x, y in zip(self.dx, self.dy)]
         dlg = QtGui.QProgressDialog(u'Otimizando campo', u'Cancelar',
@@ -358,11 +411,8 @@ class Analise_Ctrl:
         
     def gerar_triangulacao(self):
         '''
-        triangular -> None
-        
-        Gera a triangulação de Delaunay para o conjunto de dados, 
-        plota os triângulos e exibe o número de arestas encontradas.      
-        
+        Gera a triangulação de Delaunay para o conjunto de dados,
+        plota os triângulos e exibe o número de arestas encontradas
         '''
         vects = [zip(x, y) for x, y in zip(self.dx, self.dy)]
         points = []
@@ -377,8 +427,8 @@ class Analise_Ctrl:
 
         x, y = zip(*points)
         t = tri.Triangulation(x, y)
-        self.figuras_triang.append(Figure(dpi = 120))
-        axes = self.figuras_triang[-1].add_subplot(111, aspect = 'equal')
+        self.figuras_triang.append(Figure(dpi=120))
+        axes = self.figuras_triang[-1].add_subplot(111, aspect='equal')
         minx = round(min(zip(*self.dx)[0])) - 1
         maxx = round(max(zip(*self.dx)[-1]))
         miny = round(min(self.dy[0])) - 1
@@ -394,6 +444,9 @@ class Analise_Ctrl:
         self.GAs.append((len(t.edges) - len(x)) / float(len(x)))
         
     def gerar_widgets(self):
+        '''
+        Gera todos os widgets dos gráficos que serão colocados nas telas
+        '''
         for indice in range(len(self.matrizes)):
             graph_widget = Grafics_widget()
             graph_widget.setup()
@@ -441,9 +494,10 @@ class Analise_Ctrl:
             self.ui.ui.stackedTriang.addWidget(trian_widget)
             self.ui.ui.stackedGPA.addWidget(widget_gpa_ev)
             
-        self.ui.ui.horizontalSlider.setMaximum(len(self.matrizes)-1)
+        self.ui.ui.horizontalSlider.setMaximum(len(self.matrizes) - 1)
         self.ui.ui.horizontalSlider.setSingleStep(1)
         self.ui.ui.horizontalSlider.setPageStep(1)
             
+#Se for executado standalone
 if __name__ == '__main__':
     Analise_Ctrl()

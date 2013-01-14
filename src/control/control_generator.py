@@ -1,29 +1,52 @@
 # -*- coding: utf-8 -*-
+#==================================Imports=====================================#
+
+# Componentes PyQt4
 from PyQt4 import QtCore, QtGui
+
+# Componentes internos
 from control.control_set_creator import Set_Creator_Ctrl
 from control.control_analisys import Analise_Ctrl
 from models.campos import campo_combinado
 from utils.Constants import nomes_dos_campos
 from view.view_generator import Generator_View
 
+#=======================Preparação de ambiente da classe=======================#
 
+# Configura conversão pra Unicode
 try:
     _fromUtf8 = QtCore.QString.fromUtf8
 except AttributeError:
     _fromUtf8 = lambda s: s
 
 class Generator_Ctrl:
+    '''
+    Controla o módulo do gerador de campos de gradientes
+    '''
     def __init__(self):
+        '''
+        Instancia atributos da classe e cria a interface gráfica
+        '''
         self.pilha = []
         self.ui = Generator_View(self)
         self.ui.showMaximized()
         self.status = "" 
 
     def gerar_novo_campo(self):
+        '''
+        Chama ainterface de criação de um novo campo de gradientes
+        '''
         self.ctrl_set_creator = Set_Creator_Ctrl(self)
         self.status = 'novo'
         
     def recebe_campo(self, campo):
+        '''
+        Recebe o campo gerado e acrescenta à lista de campos
+            params:
+                campo -> campo_aleatorio, campo_combinado, campo_constante,
+                    campo_doublet, campo_fonte, campo_turbilhao
+                    um campo de gradientes
+        '''
         if self.status == 'novo':
             self.add_novo_campo(campo)
         else:
@@ -32,6 +55,9 @@ class Generator_Ctrl:
         del(self.ctrl_set_creator)
         
     def atualizar_campo(self):
+        '''
+        Chama a interface que atualiza os dados do campos de gradientes
+        '''
         if len(self.pilha) > 0:
             i = self.ui.getListWidget().currentRow()
             if i < 0:
@@ -51,16 +77,34 @@ class Generator_Ctrl:
             pass
         
     def atualiza_campo(self, campo):
+        '''
+        Atualiza os dados de um campo de gradientes selecionado
+            params:
+                campo -> campo_aleatorio, campo_combinado, campo_constante,
+                    campo_doublet, campo_fonte, campo_turbilhao
+                    um campo de gradientes
+        '''
         i = self.ui.getListWidget().currentRow()
         self.pilha[i] = campo
         self.ui.getListWidget().takeItem(i)
         self.ui.getListWidget().insertItem(i, QtGui.QListWidgetItem(_fromUtf8(nomes_dos_campos[campo.get_type()])))
         
     def add_novo_campo(self, campo):
+        '''
+        Adiciona uma nova entrada de campo de gradientes à lista
+            params:
+                campo -> campo_aleatorio, campo_combinado, campo_constante,
+                    campo_doublet, campo_fonte, campo_turbilhao
+                    um campo de gradientes
+        '''
         self.pilha.insert(0, campo)
         self.ui.getListWidget().insertItem(0, QtGui.QListWidgetItem(_fromUtf8(nomes_dos_campos[campo.get_type()])))
         
     def combina_campos(self):
+        '''
+        Combina todos os campos da lista em um único através de operações
+        matemáticas
+        '''
         mat = []
         for campo in self.pilha:
             mat.append(campo.get_mat())
@@ -90,15 +134,25 @@ class Generator_Ctrl:
         
         
     def remove_item(self):
+        '''
+        Remove uma entrada da lista de Campos de Gradientes
+        '''
         i = self.ui.getListWidget().currentRow()
         self.pilha.pop(i)
         self.ui.getListWidget().takeItem(i)
         
     def limpa_lista(self):
+        '''
+        Limpa a lista de campos de gradientes
+        '''
         self.pilha = []
         self.ui.getListWidget().clear()
         
     def analisar(self):
+        '''
+        Chama a interface de análise dos campos de gradientes para a entrada
+        selecionada
+        '''
         super_mat = (self.pilha[self.ui.getListWidget().currentRow()]).get_mat()
         c = Analise_Ctrl(super_mat)
         c.processa_matrizes()

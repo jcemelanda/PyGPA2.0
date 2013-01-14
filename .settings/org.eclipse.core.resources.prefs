@@ -1,2 +1,6 @@
 eclipse.preferences.version=1
 encoding//src/control/control_analisys.py=utf-8
+encoding//src/control/control_generator.py=utf-8
+encoding//src/control/control_main.py=utf-8
+encoding//src/control/control_set_creator.py=utf-8
+encoding//src/models/campos.py=utf-8
