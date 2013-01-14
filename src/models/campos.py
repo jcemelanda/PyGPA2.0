@@ -28,7 +28,7 @@ class campo_aleatorio:
         
     def __str__(self):
         '''
-        Gera uma vesão textual do campo aleatório
+        Gera uma versão textual do campo aleatório
         return:
             string
                 Versão textual do campo
@@ -43,6 +43,7 @@ class campo_aleatorio:
         return texto
         
 #=====================================setters==================================#
+    
     def set_num_mat(self, n):
         '''
         Setter para o número de matrizes
@@ -60,7 +61,7 @@ class campo_aleatorio:
                 Altura das matrizes do campos
         '''
         self._altura = h
-        
+    
     def set_largura(self, w):
         '''
         Setter para a largura das matrizes
@@ -69,7 +70,7 @@ class campo_aleatorio:
                 Largura das matrizes do campos
         '''
         self._largura = w
-        
+    
     def set_mat(self, mat):
         '''
         Setter para as matrizes
@@ -78,8 +79,9 @@ class campo_aleatorio:
                 matrizes do campos
         '''
         self._mat = mat
-        
+    
 #======================================getters=================================#
+    
     def get_num_mat(self):
         '''
         Getter para o número de matrizes
@@ -106,7 +108,7 @@ class campo_aleatorio:
                 largura das matrizes do campo
         '''
         return self._largura
-
+    
     def get_mat(self):
         '''
         Getter para as matrizes
@@ -124,7 +126,7 @@ class campo_aleatorio:
                 Tipo do campo
         '''
         return self.__type__
-
+    
 class campo_combinado:
     '''
     Classe que representa um campo gerado pela combinação de dois ou mais campos
@@ -132,7 +134,7 @@ class campo_combinado:
     __type__ = 5
     def __init__(self, n=0, h=1, w=1, mat=[], campos=[]):
         '''
-        Inicializa os atributos do campo aleatório
+        Inicializa os atributos do campo combinado
         params:
             n -> int
                 Número de matrizes
@@ -150,10 +152,10 @@ class campo_combinado:
         self._largura = w
         self._mat = mat
         self._campos = campos
-        
+    
     def __str__(self):
         '''
-        Gera uma vesão textual do campo combinado
+        Gera uma versão textual do campo combinado
         return:
             string
                 Versão textual do campo
@@ -187,7 +189,7 @@ class campo_combinado:
                 Altura das matrizes do campos
         '''
         self._altura = h
-        
+    
     def set_largura(self, w):
         '''
         Setter para a largura das matrizes
@@ -196,7 +198,7 @@ class campo_combinado:
                 Largura das matrizes do campos
         '''
         self._largura = w
-        
+    
     def set_mat(self, mat):
         '''
         Setter para as matrizes
@@ -205,7 +207,7 @@ class campo_combinado:
                 Matrizes do campo
         '''
         self._mat = mat
-        
+    
     def set_campos(self, campos):
         '''
         Setter para os campos que formam o campo
@@ -215,9 +217,9 @@ class campo_combinado:
                 Campos que compõe o campo combinado
         '''
         self._campos = campos
-        
+    
 #=====================================getters==================================#
-
+    
     def get_num_mat(self):
         '''
         Getter para o número de matrizes
@@ -244,7 +246,7 @@ class campo_combinado:
                 largura das matrizes do campo
         '''
         return self._largura
-
+    
     def get_mat(self):
         '''
         Getter para as matrizes
@@ -312,10 +314,10 @@ class campo_constante:
         self._constante = c
         self._angulo = a
         self._mat = mat
-        
+    
     def __str__(self):
         '''
-        Gera uma vesão textual do campo combinado
+        Gera uma versão textual do campo combinado
         return:
             string
                 Versão textual do campo
@@ -330,8 +332,9 @@ class campo_constante:
         for c in self._mat:
             texto += str_mat(c)+'\n'
         return texto
-
+    
 #=====================================setters==================================#
+    
     def set_num_mat(self, n):
         '''
         Setter para o número de matrizes
@@ -349,7 +352,7 @@ class campo_constante:
                 Altura das matrizes do campos
         '''
         self._altura = h
-        
+    
     def set_largura(self, w):
         '''
         Setter para a largura das matrizes
@@ -358,7 +361,7 @@ class campo_constante:
                 Largura das matrizes do campos
         '''
         self._largura = w
-        
+    
     def set_cosntante(self, c):
         '''
         Setter para a constante de geração dos vetores
@@ -376,7 +379,7 @@ class campo_constante:
                 Matrizes do campo
         '''
         self._angulo = a
-        
+    
     def set_mat(self, mat):
         '''
         Setter para as matrizes
@@ -385,8 +388,9 @@ class campo_constante:
                 Matrizes do campo
         '''
         self._mat = mat
-        
+    
 #=====================================getters==================================#
+    
     def get_num_mat(self):
         '''
         Getter para o número de matrizes
@@ -440,6 +444,7 @@ class campo_constante:
                 matrizes do campo
         '''
         return self._mat
+    
     def get_type(self):
         '''
         Getter para o tipo do campo
@@ -450,16 +455,41 @@ class campo_constante:
         return self.__type__
     
 class campo_doublet:
+    '''
+    Classe que representa um campo doublet
+    '''
     __type__ = 2
     def __init__(self, n=0, h=1, w=1, p=0, m=0, mat=[]):
+        '''
+        Inicializa os atributos do campo doublet
+        params:
+            n -> int
+                Número de matrizes
+            h -> int
+                Altura das matrizes
+            w -> int
+                Largura das matrizes
+            p -> int
+                Início
+            m -> int
+                Magnitude do campo
+            mat -> list
+                Lista de Matrizes
+        '''
         self._num_mat = n
         self._altura = h
         self._largura = w
         self._inicio = p
         self._magnitude = m
         self._mat = mat
-        
+    
     def __str__(self):
+        '''
+        Gera uma versão textual do campo combinado
+        return:
+            string
+                Versão textual do campo
+        '''
         texto = 'Campo Doublet'+\
                 '\nn: '+str(self._num_mat)+\
                 '\naltura: '+str(self._altura)+\
@@ -471,59 +501,163 @@ class campo_doublet:
             texto += str_mat(c)+'\n'
         return texto
     
+#=====================================setters==================================#
+    
     def set_num_mat(self, n):
+        '''
+        Setter para o número de matrizes
+        params:
+            n -> int
+                Número de matrizes do campos
+        '''
         self._num_mat = n
     
     def set_altura(self, h):
+        '''
+        Setter para a altura das matrizes
+        params:
+            h -> int
+                Altura das matrizes do campos
+        '''
         self._altura = h
-        
+    
     def set_largura(self, w):
+        '''
+        Setter para a largura das matrizes
+        params:
+            w -> int
+                Largura das matrizes do campos
+        '''
         self._largura = w
-        
+    
     def set_inicio(self, p):
+        '''
+        Setter para a largura das matrizes
+        params:
+            w -> int
+                Largura das matrizes do campos
+        '''
         self._inicio = p
     
     def set_magnitude(self, m):
+        '''
+        Setter para a magnitude dos vetores
+        params:
+            m -> int
+                Magnitude dos vetores
+        '''
         self._magnitude = m
-        
+    
     def set_mat(self, mat):
+        '''
+        Setter para as matrizes
+        params:
+            mat -> list
+                Matrizes do campo
+        '''
         self._mat = mat
-        
+    
+#=====================================getters==================================#
+    
     def get_num_mat(self):
+        '''
+        Getter para o número de matrizes
+        return:
+            int
+                número de matrizes do campo
+        '''
         return self._num_mat
     
     def get_altura(self):
+        '''
+        Getter para a altura das matrizes
+        return:
+            int
+                altura das matrizes do campo
+        '''
         return self._altura
     
     def get_largura(self):
+        '''
+        Getter para a largura das matrizes
+        return:
+            int
+                largura das matrizes do campo
+        '''
         return self._largura
     
     def get_inicio(self):
+        '''
+        Getter para a a magnitude do campo
+        return:
+            int
+                constante geradora dos vetores
+        '''
         return self._inicio
     
     def get_magnitude(self):
-        return self._magnitude
-
-    def get_const_1(self):
+        '''
+        Getter para a a magnitude do campo
+        return:
+            int
+                constante geradora dos vetores
+        '''
         return self._magnitude
     
     def get_mat(self):
+        '''
+        Getter para as matrizes
+        return:
+            list
+                matrizes do campo
+        '''
         return self._mat
     
     def get_type(self):
+        '''
+        Getter para o tipo do campo
+        return:
+            int
+                Tipo do campo
+        '''
         return self.__type__
     
 class campo_fonte:
+    '''
+    Classe que representa um campo fonte / sumidouro
+    '''
     __type__ = 3
     def __init__(self, n=0, h=1, w=1, p=0, m=0, mat=[]):
+        '''
+        Inicializa os atributos do campo doublet
+        params:
+            n -> int
+                Número de matrizes
+            h -> int
+                Altura das matrizes
+            w -> int
+                Largura das matrizes
+            p -> int
+                Início
+            m -> int
+                Magnitude do campo
+            mat -> list
+                Lista de Matrizes
+        '''
         self._num_mat = n
         self._altura = h
         self._largura = w
         self._inicio = p
         self._magnitude = m
         self._mat = mat
-        
+    
     def __str__(self):
+        '''
+        Gera uma versão textual do campo combinado
+        return:
+            string
+                Versão textual do campo
+        '''
         texto = 'Campo Fonte'+\
                 '\nn: '+str(self._num_mat)+\
                 '\naltura: '+str(self._altura)+\
@@ -536,50 +670,146 @@ class campo_fonte:
         return texto
     
     def set_num_mat(self, n):
+        '''
+        Setter para o número de matrizes
+        params:
+            n -> int
+                Número de matrizes do campos
+        '''
         self._num_mat = n
     
     def set_altura(self, h):
+        '''
+        Setter para a altura das matrizes
+        params:
+            h -> int
+                Altura das matrizes do campos
+        '''
         self._altura = h
-        
+    
     def set_largura(self, w):
+        '''
+        Setter para a largura das matrizes
+        params:
+            w -> int
+                Largura das matrizes do campos
+        '''
         self._largura = w
-        
+    
     def set_inicio(self, p):
+        '''
+        Setter para a largura das matrizes
+        params:
+            w -> int
+                Largura das matrizes do campos
+        '''
         self._inicio = p
     
     def set_magnitude(self, m):
+        '''
+        Setter para a magnitude do campo
+        params:
+            m
+                constante geradora dos vetores
+        '''
         self._magnitude = m
-        
+    
     def set_mat(self, mat):
+        '''
+        Setter para as matrizes
+        params:
+            mat -> list
+                Matrizes do campo
+        '''
         self._mat = mat
-        
+    
     def get_num_mat(self):
+        '''
+        Getter para o número de matrizes
+        return:
+            int
+                número de matrizes do campo
+        '''
         return self._num_mat
     
     def get_altura(self):
+        '''
+        Getter para a altura das matrizes
+        return:
+            int
+                altura das matrizes do campo
+        '''
         return self._altura
     
     def get_largura(self):
+        '''
+        Getter para a largura das matrizes
+        return:
+            int
+                largura das matrizes do campo
+        '''
         return self._largura
     
     def get_inicio(self):
+        '''
+        Getter para a a magnitude do campo
+        return:
+            int
+                constante geradora dos vetores
+        '''
         return self._inicio
     
     def get_magnitude(self):
-        return self._magnitude
-
-    def get_const_1(self):
+        '''
+        Getter para a a magnitude do campo
+        return:
+            int
+                constante geradora dos vetores
+        '''
         return self._magnitude
     
     def get_mat(self):
+        '''
+        Getter para as matrizes
+        return:
+            list
+                matrizes do campo
+        '''
         return self._mat
     
     def get_type(self):
+        '''
+        Getter para o tipo do campo
+        return:
+            int
+                Tipo do campo
+        '''
         return self.__type__
     
 class campo_turbilhao:
+    '''
+    Classe que representa um campo turbilhão
+    '''
     __type__ = 4
     def __init__(self, n=0, h=1, w=1, p=0, m=0, ic=0, mat=[]):
+        '''
+        Inicializa os atributos do campo turbilhão
+        params:
+            n -> int
+                Número de matrizes
+            h -> int
+                Altura das matrizes
+            w -> int
+                Largura das matrizes
+            p -> int
+                Início
+            m -> int
+                Magnitude do campo
+            ic -> complex
+                Posição Complexa
+            mat -> list
+                Lista de Matrizes
+        '''
         self._num_mat = n
         self._altura = h
         self._largura = w
@@ -589,6 +819,12 @@ class campo_turbilhao:
         self._mat = mat
     
     def __str__(self):
+        '''
+        Gera uma versão textual do campo combinado
+        return:
+            string
+                Versão textual do campo
+        '''
         texto = 'Campo Turbilhão'+\
                 '\nn: '+str(self._num_mat)+\
                 '\naltura: '+str(self._altura)+\
@@ -600,59 +836,146 @@ class campo_turbilhao:
         for c in self._mat:
             texto += str_mat(c)+'\n'
         return texto
-        
+    
     def set_num_mat(self, n):
+        '''
+        Gera uma versão textual do campo combinado
+        return:
+            string
+                Versão textual do campo
+        '''
         self._num_mat = n
     
     def set_altura(self, h):
+        '''
+        Setter para a altura das matrizes
+        params:
+            h -> int
+                Altura das matrizes do campos
+        '''
         self._altura = h
-        
+    
     def set_largura(self, w):
+        '''
+        Setter para a largura das matrizes
+        params:
+            w -> int
+                Largura das matrizes do campos
+        '''
         self._largura = w
-        
+    
     def set_inicio(self, p):
+        '''
+        Setter para a largura das matrizes
+        params:
+            w -> int
+                Largura das matrizes do campos
+        '''
         self._inicio = p
     
     def set_magnitude(self, m):
+        '''
+        Setter para a magnitude do campo
+        params:
+            m
+                constante geradora dos vetores
+        '''
         self._magnitude = m
-        
+    
     def set_posicao(self, ic):
+        '''
+        Setter para a posição
+        params:
+            m -> complex
+                posição
+        '''
         self._posicao = ic
-        
+    
     def set_mat(self, mat):
+        '''
+        Setter para as matrizes
+        params:
+            mat -> list
+                Matrizes do campo
+        '''
         self._mat = mat
-        
+    
     def get_num_mat(self):
+        '''
+        Getter para o número de matrizes
+        return:
+            int
+                número de matrizes do campo
+        '''
         return self._num_mat
     
     def get_altura(self):
+        '''
+        Getter para a altura das matrizes
+        return:
+            int
+                altura das matrizes do campo
+        '''
         return self._altura
     
     def get_largura(self):
+        '''
+        Getter para a largura das matrizes
+        return:
+            int
+                largura das matrizes do campo
+        '''
         return self._largura
     
     def get_inicio(self):
+        '''
+        Getter para a a magnitude do campo
+        return:
+            int
+                constante geradora dos vetores
+        '''
         return self._inicio
     
     def get_magnitude(self):
+        '''
+        Getter para a a magnitude do campo
+        return:
+            int
+                constante geradora dos vetores
+        '''
         return self._magnitude
-
+    
     def get_posicao(self):
-        return self._posicao
-    
-    def get_const_1(self):
-        return self._magnitude
-    
-    def get_const_2(self):
+        '''
+        Getter para aposição
+        return:
+            complex
+                posição
+        '''
         return self._posicao
     
     def get_mat(self):
+        '''
+        Getter para as matrizes
+        return:
+            list
+                matrizes do campo
+        '''
         return self._mat
     
     def get_type(self):
+        '''
+        Getter para o tipo do campo
+        return:
+            int
+                Tipo do campo
+        '''
         return self.__type__
     
 def str_mat(mat):
+    '''
+    Cria uma versão textual de uma matriz bidimensional
+    '''
     t = '[\n'
     for i in xrange(len(mat)):
         t += '[ '

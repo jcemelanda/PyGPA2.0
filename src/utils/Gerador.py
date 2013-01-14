@@ -1,10 +1,38 @@
+# -*- coding:utf-8 -*-
+'''
+Módulo que contém a classe geradora de matrizes
+'''
+#==================================Imports=====================================#
+
 from cmath import polar
 from math import cos, sin, log10, log
 from random import random, randrange
 import math
+
+
 class Gerador:
+    '''
+    Classe para gerar as matrizes dos campos de gradientes
+    '''
     @staticmethod
     def constante(n, altura, largura, angulo, constante):
+        '''
+        Gera as matrizes de um campo constante
+        params:
+            n -> int
+                Número de Matrizes
+            altura -> int
+                Altura de cada matriz
+            largura -> int
+                Largura de cada matriz
+            angulo -> int
+                Angulo dos vetores
+            constante -> int
+                Constante para a norma dos vetores
+        return:
+            list
+                Lista de matrizes
+        '''
         mat = []
         for i in range(altura):
             line = []
@@ -20,6 +48,25 @@ class Gerador:
     
     @staticmethod
     def sumidouro(n, altura, largura, magnitude, inicio, vx=1, vy=1):
+        '''
+        Gera as matrizes de um campo fonte/sumidouro
+        params:
+            n -> int
+                Número de Matrizes
+            altura -> int
+                Altura de cada matriz
+            largura -> int
+                Largura de cada matriz
+            magnitude -> int
+                Magnitude do campo
+            inicio -> int
+                Ponto de inicio da movimentação da fonte
+            vx -> int
+            vy -> int
+        return:
+            list
+                Lista de matrizes
+        '''
         supermat = []
         
         for k in xrange(n):
@@ -46,6 +93,25 @@ class Gerador:
             
     @staticmethod
     def doublet(n, altura, largura, magnitude, inicio, vx=1, vy=1):
+        '''
+        Gera as matrizes de um campo doublet
+        params:
+            n -> int
+                Número de Matrizes
+            altura -> int
+                Altura de cada matriz
+            largura -> int
+                Largura de cada matriz
+            magnitude -> int
+                Magnitude do campo
+            inicio -> int
+                Ponto de inicio da movimentação da fonte
+            vx -> int
+            vy -> int
+        return:
+            list
+                Lista de matrizes
+        '''
         supermat = []
         for k in xrange(n):
             mat = []
@@ -69,6 +135,27 @@ class Gerador:
         
     @staticmethod
     def turbilhao(n, altura, largura, magnitude, posicao, inicio, vx=1, vy=1):
+        '''
+        Gera as matrizes de um campo turbilhão
+        params:
+            n -> int
+                Número de Matrizes
+            altura -> int
+                Altura de cada matriz
+            largura -> int
+                Largura de cada matriz
+            magnitude -> int
+                Magnitude do campo
+            magnitude -> int
+                Posição
+            inicio -> int
+                Ponto de inicio da movimentação da fonte
+            vx -> int
+            vy -> int
+        return:
+            list
+                Lista de matrizes
+        '''
         supermat = []
         for k in xrange(n):
             mat = []
@@ -92,6 +179,19 @@ class Gerador:
             
     @staticmethod
     def aleatorio(n, altura, largura):
+        '''
+        Gera as matrizes de um campo turbilhão
+        params:
+            n -> int
+                Número de Matrizes
+            altura -> int
+                Altura de cada matriz
+            largura -> int
+                Largura de cada matriz
+        return:
+            list
+                Lista de matrizes
+        '''
         return [[[(x, y) for (x, y) in 
                   zip(
                       [randrange(-1e3, 1e3) / 1000.0 for a in xrange(largura)],

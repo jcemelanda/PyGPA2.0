@@ -1,4 +1,7 @@
 # -*- coding:utf-8 -*-
+'''
+Módulo de controle do módulo de análise
+'''
 #==================================Imports=====================================#
 
 # Componentes PyQt4
