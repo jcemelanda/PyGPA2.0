@@ -70,7 +70,6 @@ class Generator_Ctrl:
                 pass
             else:
                 campo = self.pilha[self.ui.getListWidget().currentRow()]
-                print campo
                 self.ctrl_set_creator = Set_Creator_Ctrl(self, campo)
                 self.status = 'edita'
         else:
@@ -112,9 +111,7 @@ class Generator_Ctrl:
         for campo in self.pilha:
             mat.append(campo.get_mat())
         m1 = zip(*mat)
-        print m1
         m2 = [zip(*m1[i]) for i in range(len(m1))]
-        print m2
         super_mat = []
         for matriz in m2:
             m = []

@@ -55,116 +55,93 @@ class Set_Creator_Ctrl:
         Gera as matrizes e coloca o campo gerado na lista de campos do 
         Generator_Ctrl
         '''
+        
         self.ctrl.recebe_campo(self.funcoes[self.ui.get_indice_selecionado()]())
         
      
-    def gera_aleatorio(self, n=3, altura=3, largura=3):
+    def gera_aleatorio(self):
         '''
         Gera um campo aleatório com os parâmetros passados
-        params:
-            n -> int
-                Número de matrizes do campos gerado. Default: 3
-            altura -> int
-                Altura das matrizes que compõem o campo. Default: 3
-            largura -> int
-                Largura das matrizes que compõem o campo. Default: 3
         return:
             campos_aleatorio
                 Campo aleatório gerado
         '''
+        n = eval(str(self.ui.get_num_mat()))
+        altura = eval(str(self.ui.get_altura()))
+        largura = eval(str(self.ui.get_largura()))
+        
         mat = Gerador.aleatorio(n, altura, largura)
         
         return campo_aleatorio(n, altura, largura, mat[:])
     
-    def gera_constante(self, n=3, altura=3, largura=3, constante=1, angulo=0):
+    def gera_constante(self):
         '''
         Gera um campo cosntante com os parâmetros passados
-        params:
-            n -> int
-                Número de matrizes do campos gerado. Default: 3
-            altura -> int
-                Altura das matrizes que compõem o campo. Default: 3
-            largura -> int
-                Largura das matrizes que compõem o campo. Default: 3
-            constante -> int
-                Constante usada para a geração do módulo dos vetores do campo 
-                cosntante. Default:1
-            angulo -> int
-                Angulo dos vetores do campos constante
         return:
             campo_constante
                 Campos constante gerado
         '''
         
+        n = eval(str(self.ui.get_num_mat()))
+        altura = eval(str(self.ui.get_altura()))
+        largura = eval(str(self.ui.get_largura()))
+        constante = eval(str(self.ui.get_const_1()))
+        angulo = eval(str(self.ui.get_const_2()))
+        
         mat = Gerador.constante(n, altura, largura, angulo, constante)
         return campo_constante(n, altura, largura, constante, angulo, mat)
         
-    def gera_doublet(self, n=3, altura=3, largura=3, magnitude=1, inicio=0+0j):
+    def gera_doublet(self):
         '''
         Gera um campo doublet com os parâmetros passados
-        params:
-            n -> int
-                Número de matrizes do campos gerado. Default: 3
-            altura -> int
-                Altura das matrizes que compõem o campo. Default: 3
-            largura -> int
-                Largura das matrizes que compõem o campo. Default: 3
-            magnitude -> int
-                magnitude usada para a geração do vetores do campo doublet. 
-                Default:1
-            inicio -> complex
-                Ponto de início da movimentação do padrão doublet
         return:
             campo_doublet
                 Campo Doublet Gerado
         '''
+        
+        n = eval(str(self.ui.get_num_mat()))
+        altura = eval(str(self.ui.get_altura()))
+        largura = eval(str(self.ui.get_largura()))
+        magnitude = eval(str(self.ui.get_const_1()))
+        inicio = complex(eval(str(self.ui.get_ini_x())),
+                  eval(str(self.ui.get_ini_y())))
+        
         mat = Gerador.doublet(n, altura, largura, magnitude, inicio)
         return campo_doublet(n, altura, largura, inicio, magnitude, mat)
     
-    def gera_fonte(self, n, altura, largura, magnitude, inicio):
+    def gera_fonte(self):
         '''
         Gera um campo fonte/sumidouro com os parâmetros passados
-        params:
-            n -> int
-                Número de matrizes do campos gerado. Default: 3
-            altura -> int
-                Altura das matrizes que compõem o campo. Default: 3
-            largura -> int
-                Largura das matrizes que compõem o campo. Default: 3
-            magnitude -> int
-                magnitude usada para a geração do vetores do campo fonte. 
-                Default:1
-            inicio -> complex
-                Ponto de início da movimentação do padrão fonte
         return:
             campo_fonte
                 Campo Fonte/Sumidouro Gerado
         '''
+        n = eval(str(self.ui.get_num_mat()))
+        altura = eval(str(self.ui.get_altura()))
+        largura = eval(str(self.ui.get_largura()))
+        magnitude = eval(str(self.ui.get_const_1()))
+        inicio = complex(eval(str(self.ui.get_ini_x())),
+                  eval(str(self.ui.get_ini_y())))
+        
         mat = Gerador.sumidouro(n, altura, largura, magnitude, inicio)
         return campo_fonte(n, altura, largura, inicio, magnitude, mat)
         
-    def gera_turbilhao(self, n=3, altura=3, largura=3, magnitude=1, posicao=1, 
-                       inicio=0+0j):
+    def gera_turbilhao(self):
         '''
         Gera um campo fonte/sumidouro com os parâmetros passados
-        params:
-            n -> int
-                Número de matrizes do campos gerado. Default: 3
-            altura -> int
-                Altura das matrizes que compõem o campo. Default: 3
-            largura -> int
-                Largura das matrizes que compõem o campo. Default: 3
-            magnitude -> int
-                magnitude usada para a geração do vetores do campo turbilhão. 
-                Default:1
-            posicao -> int
-                posição. Default 1
-            inicio -> complex
-                Ponto de início da movimentação do padrão turbilhão
         return:
             campo_fonte
                 Campo Turbilhão Gerado
         '''
+        
+        n = eval(str(self.ui.get_num_mat()))
+        altura = eval(str(self.ui.get_altura()))
+        largura = eval(str(self.ui.get_largura()))
+        magnitude = eval(str(self.ui.get_const_1()))
+        posicao = eval(str(self.ui.get_const_2()))
+        inicio = complex(eval(str(self.ui.get_ini_x())),
+                  eval(str(self.ui.get_ini_y())))
+        
         mat = Gerador.turbilhao(n, altura, largura, magnitude, posicao, inicio)
         return campo_turbilhao(n, altura, largura, inicio, magnitude, posicao, mat)
          

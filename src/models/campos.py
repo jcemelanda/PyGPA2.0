@@ -436,6 +436,24 @@ class campo_constante:
         '''
         return self._angulo
     
+    def get_const_1(self):
+        '''
+        Getter para a constante 1 (cosntante)
+        return:
+            int
+                A constante de geração do campo
+        '''
+        return self.get_constante()
+    
+    def get_const_2(self):
+        '''
+        Getter para a constante 2 (angulo)
+        return:
+            int
+                Angulo dos vetores
+        '''
+        return self.get_angulo()
+    
     def get_mat(self):
         '''
         Getter para as matrizes
@@ -604,6 +622,15 @@ class campo_doublet:
         '''
         return self._magnitude
     
+    def get_const_1(self):
+        '''
+        Getter para a constante 1 (magnitude)
+        return:
+            int
+                A constante de geração do campo
+        '''
+        return self.get_magnitude()
+    
     def get_mat(self):
         '''
         Getter para as matrizes
@@ -767,6 +794,15 @@ class campo_fonte:
                 constante geradora dos vetores
         '''
         return self._magnitude
+    
+    def get_const_1(self):
+        '''
+        Getter para a constante 1 (magnitude)
+        return:
+            int
+                A constante de geração do campo
+        '''
+        return self.get_magnitude()
     
     def get_mat(self):
         '''
@@ -953,6 +989,24 @@ class campo_turbilhao:
                 posição
         '''
         return self._posicao
+    
+    def get_const_1(self):
+        '''
+        Getter para a constante 1 (magnitude)
+        return:
+            int
+                A constante de geração do campo
+        '''
+        return self.get_magnitude()
+    
+    def get_const_2(self):
+        '''
+        Getter para a constante 2 (posicao)
+        return:
+            int
+                Angulo dos vetores
+        '''
+        return self.get_posicao()
     
     def get_mat(self):
         '''

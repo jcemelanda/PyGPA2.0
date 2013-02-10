@@ -5,8 +5,8 @@ Módulo que contém a classe geradora de matrizes
 #==================================Imports=====================================#
 
 from cmath import polar
-from math import cos, sin, log10, log
-from random import random, randrange
+from math import cos, sin
+from random import randrange
 import math
 
 
@@ -68,6 +68,7 @@ class Gerador:
                 Lista de matrizes
         '''
         supermat = []
+        magnitude = complex(magnitude, magnitude)
         
         for k in xrange(n):
             mat = []
@@ -79,8 +80,7 @@ class Gerador:
                     if z == 0 + 0j:
                         f_z = z
                     else:
-                        f_z = magnitude / (2 * math.pi * z)
-                        f_z = complex(f_z.real, -1 * f_z.imag)
+                        f_z = magnitude * complex(1, 1) / (2 * math.pi * z)
             
                     modulo, argumento = polar(f_z)
                     x = modulo * cos(argumento)
@@ -112,6 +112,8 @@ class Gerador:
             list
                 Lista de matrizes
         '''
+        if(magnitude.__class__ != complex):
+            magnitude = complex(magnitude, magnitude)
         supermat = []
         for k in xrange(n):
             mat = []
@@ -123,7 +125,7 @@ class Gerador:
                     if z == 0 + 0j:
                         f_z = z
                     else:
-                        f_z = magnitude / (2 * math.pi * z * z)
+                        f_z = magnitude / (2 * math.pi * pow(z, 2))
                     modulo, argumento = polar(f_z)
                     x = modulo * cos(argumento)
                     y = modulo * sin(argumento)
@@ -201,11 +203,11 @@ class Gerador:
                  for k in xrange(n)] 
              
 def test():
-    #print Gerador.constante(1, 3, 3, math.pi, 1)
-    print Gerador.aleatorio(3, 3, 3)
-    #print Gerador.sumidouro(1, 3, 3, 1, 0+0j)
-    #print Gerador.turbilhao(1, 3, 3, 1, 1+0j, 0+0j)
-    #print Gerador.doublet(1, 3, 3, 1, 0+0j)
+    # print Gerador.constante(1, 3, 3, math.pi, 1)
+    # print Gerador.aleatorio(3, 3, 3)
+    print Gerador.sumidouro(1, 3, 3, 1, 0 + 0j)
+    # print Gerador.turbilhao(1, 3, 3, 1, 1+0j, 0+0j)
+    # print Gerador.doublet(1, 3, 3, 1, 0+0j)
                 
 if __name__ == '__main__':
     test()
