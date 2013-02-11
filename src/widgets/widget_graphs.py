@@ -52,7 +52,7 @@ class Grafics_widget(QtGui.QWidget):
         self.groupBox_3.setTitle(QtGui.QApplication.translate("self", "GPA", None, QtGui.QApplication.UnicodeUTF8))
         self.label.setText(QtGui.QApplication.translate("self", "0.788", None, QtGui.QApplication.UnicodeUTF8))
 
-from PyKDE4.kdeui import KPlotWidget
+
 
 if __name__ == "__main__":
     import sys
