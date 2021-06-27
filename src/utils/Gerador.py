@@ -70,11 +70,11 @@ class Gerador:
         supermat = []
         magnitude = complex(magnitude, magnitude)
         
-        for k in xrange(n):
+        for k in range(n):
             mat = []
-            for i in xrange(altura):
+            for i in range(altura):
                 line = []
-                for j in xrange(largura):
+                for j in range(largura):
                     zi = complex(i - altura / 2, j - largura / 2) 
                     z = zi - inicio
                     if z == 0 + 0j:
@@ -115,11 +115,11 @@ class Gerador:
         if(magnitude.__class__ != complex):
             magnitude = complex(magnitude, magnitude)
         supermat = []
-        for k in xrange(n):
+        for k in range(n):
             mat = []
-            for i in xrange(altura):
+            for i in range(altura):
                 line = []
-                for j in xrange(largura):
+                for j in range(largura):
                     zi = complex(i - altura / 2, j - largura / 2) 
                     z = zi - inicio
                     if z == 0 + 0j:
@@ -159,11 +159,11 @@ class Gerador:
                 Lista de matrizes
         '''
         supermat = []
-        for k in xrange(n):
+        for k in range(n):
             mat = []
-            for i in xrange(altura):
+            for i in range(altura):
                 line = []
-                for j in xrange(largura):
+                for j in range(largura):
                     zi = complex(i - altura / 2, j - largura / 2)
                     z = zi - inicio
                     if(z == 0 + 0j):
@@ -196,18 +196,18 @@ class Gerador:
         '''
         return [[[(x, y) for (x, y) in 
                   zip(
-                      [randrange(-1e3, 1e3) / 1000.0 for a in xrange(largura)],
-                      [randrange(-1e3, 1e3) / 1000.0 for b in xrange(largura)]
+                      [randrange(-1e3, 1e3) / 1000.0 for a in range(largura)],
+                      [randrange(-1e3, 1e3) / 1000.0 for b in range(largura)]
                       )] 
-                 for j in xrange(largura)] 
-                 for k in xrange(n)] 
+                 for j in range(largura)] 
+                 for k in range(n)] 
              
 def test():
-    # print Gerador.constante(1, 3, 3, math.pi, 1)
-    # print Gerador.aleatorio(3, 3, 3)
-    print Gerador.sumidouro(1, 3, 3, 1, 0 + 0j)
-    # print Gerador.turbilhao(1, 3, 3, 1, 1+0j, 0+0j)
-    # print Gerador.doublet(1, 3, 3, 1, 0+0j)
+    # print(Gerador.constante(1, 3, 3, math.pi, 1))
+    # print(Gerador.aleatorio(3, 3, 3))
+    print(Gerador.sumidouro(1, 3, 3, 1, 0 + 0j))
+    # print(Gerador.turbilhao(1, 3, 3, 1, 1+0j, 0+0j))
+    # print(Gerador.doublet(1, 3, 3, 1, 0+0j))
                 
 if __name__ == '__main__':
     test()

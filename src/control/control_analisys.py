@@ -4,13 +4,13 @@ Módulo de controle do módulo de análise
 '''
 #==================================Imports=====================================#
 
-# Componentes PyQt4
-from PyQt4 import QtGui, QtCore
+# Componentes PyQt5
+from PyQt5 import QtWidgets, QtCore
 
 # Componentes Matplotlib
 from matplotlib import tri
-from matplotlib.backends.backend_qt4agg import FigureCanvasQTAgg \
-    as FigureWidget, NavigationToolbar2QTAgg as Navbar
+from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg \
+    as FigureWidget, NavigationToolbar2QT as Navbar
 from matplotlib.figure import Figure
 
 # Componentes internos
@@ -19,7 +19,7 @@ from widgets.widget_detail import Detail_widget
 from widgets.widget_graphs import Grafics_widget
 
 # PIL
-import Image
+from PIL import Image
 
 # Standard Library
 import time
@@ -64,7 +64,7 @@ class Analise_Ctrl:
         Muda o conjunto de dados sendo exibido para o próximo da ‭lista
         '''
         
-        print 'incremented'
+        print('incremented')
         self.pos += 1
         if self.current_tab == 0:
             self.ui.ui.stackedGraphics.setCurrentIndex(self.pos)
@@ -93,7 +93,7 @@ class Analise_Ctrl:
         Muda o conjunto de dados sendo exibido para o anterior da ‭lista
         '''
         
-        print 'decremented'
+        print('decremented')
         self.pos -= 1
         if self.current_tab == 0:
             self.ui.ui.stackedGraphics.setCurrentIndex(self.pos)
@@ -110,7 +110,7 @@ class Analise_Ctrl:
         '''
         Muda a exibição para o último conjunto da ‭lista
         '''
-        print 'last'
+        print('last')
         self.pos = self.ui.ui.stackedGraphics.count() - 1
         self.ui.ui.stackedGraphics.setCurrentIndex(self.pos)
         self.ui.ui.stackedVet.setCurrentIndex(self.pos)
@@ -122,7 +122,7 @@ class Analise_Ctrl:
         '''
         Muda a exibição para o prieiro conjunto da ‭lista
         '''
-        print 'first'
+        print('first')
         self.pos = 0
         self.ui.ui.stackedGraphics.setCurrentIndex(self.pos)
         self.ui.ui.stackedVet.setCurrentIndex(self.pos)
@@ -140,7 +140,7 @@ class Analise_Ctrl:
                 Posição da ‭lista que será exibida
         '''
         
-        print 'set ' + str(pos)
+        print('set ', pos)
         self.pos = pos
         self.ui.ui.stackedGraphics.setCurrentIndex(self.pos)
         self.ui.ui.stackedVet.setCurrentIndex(self.pos)
@@ -160,7 +160,7 @@ class Analise_Ctrl:
         self.figuras_GA = []
         self.normalizado = False
         self.matrizes = []
-        fd = QtGui.QFileDialog()
+        fd = QtWidgets.QFileDialog()
         file_path = fd.getOpenFileName(parent=None,
                                 caption=u'Abrir arquivo',
         filter=u'Dados textuais (*.txt *.dat);;Imagens (*.png *.bmp *.jpg)')
@@ -172,16 +172,16 @@ class Analise_Ctrl:
                 im.show()
                 w, h = im.size
                 mat = []
-                dlg = QtGui.QProgressDialog(u'Lendo Arquivo', u'Cancelar',
+                dlg = QtWidgets.QProgressDialog(u'Lendo Arquivo', u'Cancelar',
                                         0, h)
                 dlg.setModal(True)
                 dlg.setMinimumDuration(0)
                 dlg.setAutoClose(True)
                 dlg.setWindowTitle(u'Leitura de Arquivo')
                 dlg.show()
-                for i in xrange(h):
+                for i in range(h):
                     line = []
-                    for j in xrange(w):
+                    for j in range(w):
                         line.append(im.getpixel((j, i)))
                     mat.append(line)
                     dlg.setValue(i)
@@ -190,13 +190,13 @@ class Analise_Ctrl:
                 mat.reverse()
                 self.matriz = mat[:]
             except IOError as e:
-                print('Abertura de arquivo falhou ' + str(e))
+                print('Abertura de arquivo falhou ', e)
                 return
         else:
             try:
                 f = open(str(file_path), 'r')
             except IOError as e:
-                print('Abertura de arquivo falhou ' + str(e))
+                print('Abertura de arquivo falhou ', e)
                 return
             supermatriz = []
             matriz = []
@@ -262,7 +262,7 @@ class Analise_Ctrl:
         
         if self.ABERTURA == 'normal':
             dx = []
-            dlg = QtGui.QProgressDialog(u'Calculando dx', u'Cancelar',
+            dlg = QtWidgets.QProgressDialog(u'Calculando dx', u'Cancelar',
                                         0, len(self.matriz[:-1]))
             dlg.setModal(True)
             dlg.setMinimumDuration(0)
@@ -273,7 +273,7 @@ class Analise_Ctrl:
 
             for linha in self.matriz[:]:
                 linha_dx = []
-                for i in xrange(len(linha)):
+                for i in range(len(linha)):
                     if i == 0:
                         linha_dx.append(
                                 (-3 * linha[0] + 4 * linha[1] - linha[2]) / 2.0)
@@ -304,7 +304,7 @@ class Analise_Ctrl:
         '''
         if self.ABERTURA == 'normal':
             dy = []
-            dlg = QtGui.QProgressDialog(u'Calculando dy', u'Cancelar',
+            dlg = QtWidgets.QProgressDialog(u'Calculando dy', u'Cancelar',
                                         0, len(self.matriz[:-1]))
             dlg.setModal(True)
             dlg.setMinimumDuration(0)
@@ -314,7 +314,7 @@ class Analise_Ctrl:
             a = 0
             for linha in zip(*self.matriz[:]):
                 linha_dy = []
-                for i in xrange(len(linha)):
+                for i in range(len(linha)):
                     if i == 0:
                         linha_dy.append(
                                         (-3 * linha[0] + 4 * linha[1] - linha[2]) / 2.0)
@@ -386,17 +386,17 @@ class Analise_Ctrl:
         Coloca norma zero para os pares de vetores que se anulam.
         '''
         vects = [zip(x, y) for x, y in zip(self.dx, self.dy)]
-        dlg = QtGui.QProgressDialog(u'Otimizando campo', u'Cancelar',
+        dlg = QtWidgets.QProgressDialog(u'Otimizando campo', u'Cancelar',
                                     0, len(vects))
         dlg.setModal(True)
         dlg.setMinimumDuration(0)
         dlg.setAutoClose(True)
         dlg.setWindowTitle(u'Eliminar vetores')
         dlg.show()
-        for i in xrange(len(vects)):
-            for j in xrange(len(vects[0])):
-                for k in xrange(i, len(vects)):
-                    for w in xrange(len(vects[0])):
+        for i in range(len(vects)):
+            for j in range(len(vects[0])):
+                for k in range(i, len(vects)):
+                    for w in range(len(vects[0])):
                         a = vects[i][j]
                         b = vects[k][w]
                         if a == (0, 0):
@@ -419,9 +419,9 @@ class Analise_Ctrl:
         '''
         vects = [zip(x, y) for x, y in zip(self.dx, self.dy)]
         points = []
-        for i in xrange(len(vects)):
+        for i in range(len(vects)):
             line = []
-            for j in xrange(len(vects[0])):
+            for j in range(len(vects[0])):
                 x, y = vects[i][j]
                 if (abs(x) > 0.0) or (abs(y) > 0.0):
                     if [x + j, y + i] not in points:

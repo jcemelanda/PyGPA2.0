@@ -4,8 +4,8 @@ Módulo de controle do módulo principal
 '''
 #==================================Imports=====================================#
 
-# Componentes PyQt4
-from PyQt4 import QtGui, QtCore
+# Componentes PyQt5
+from PyQt5 import QtWidgets, QtCore
 
 # Standard Library
 import sys
@@ -30,21 +30,21 @@ class Main_Ctrl:
     '''
     def __init__(self):
         '''
-        Instancia uma nova aplicação gráfica PyQt4 que será usada por todo
+        Instancia uma nova aplicação gráfica PyQt5 que será usada por todo
         o ciclo de vida da aplicação
         '''
-        app = QtGui.QApplication(sys.argv)
+        app = QtWidgets.QApplication(sys.argv)
         self.ui = Main_View(self)
         self.ui.showMaximized()
         sys.exit(app.exec_())
         
-    def abrir_gerador(self):
+    def abrir_gerador(self, arg):
         '''
         Chama o módulo de geração de campos de gradientes
         '''
         Generator_Ctrl()
-    
-    def abrir_analisador(self):
+
+    def abrir_analisador(self, arg):
         '''
         Chama o módulo de análise de campos gradientes
         '''

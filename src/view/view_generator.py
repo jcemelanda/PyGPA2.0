@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
-from PyQt4 import QtGui, QtCore
+from PyQt5 import QtGui, QtCore
 from widgets.window_generator import Generator_Window
-class Generator_View(QtGui.QMainWindow):
+class Generator_View(QtGui.QWindow):
     def __init__(self, controle):
-        QtGui.QMainWindow.__init__(self)
+        QtGui.QWindow.__init__(self)
         self.controle = controle
         self.ui = Generator_Window()
         self.ui.setup(self)

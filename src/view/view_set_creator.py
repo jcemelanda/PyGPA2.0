@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from PyQt4 import QtGui, QtCore
+from PyQt5 import QtGui, QtCore
 from widgets.window_set_creator import Set_Creator_Window
 
 try:
@@ -7,7 +7,7 @@ try:
 except AttributeError:
     _fromUtf8 = lambda s: s
     
-class Set_Creator_View(QtGui.QMainWindow):
+class Set_Creator_View(QtGui.QWindow):
     def __init__(self, controle):
         self.funcoes = {
                         0:self.set_aleatorio,
@@ -16,7 +16,7 @@ class Set_Creator_View(QtGui.QMainWindow):
                         3:self.set_fonte,
                         4:self.set_turbilhao}
         
-        QtGui.QMainWindow.__init__(self)
+        QtGui.QWindow.__init__(self)
         self.controle = controle
         self.ui = Set_Creator_Window()
         self.ui.setup(self)
@@ -40,19 +40,19 @@ class Set_Creator_View(QtGui.QMainWindow):
         try:
             self.ui.const_1.setText(str(campo.get_const_1()))
         except Exception as e:
-            print e
+            print(e)
         try:
             self.ui.const_2.setText(str(campo.get_const_2()))
         except Exception as e:
-            print e
+            print(e)
         try:
             self.ui.ini_x.setText(str(campo.get_inicio().real))
         except Exception as e:
-            print e
+            print(e)
         try:
             self.ui.ini_y.setText(str(campo.get_inicio().imag))
         except Exception as e:
-            print e
+            print(e)
         
     def set_aleatorio(self):
         self.ui.lb_const_1.setVisible(False)
