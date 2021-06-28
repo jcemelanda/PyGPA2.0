@@ -21,7 +21,7 @@ class Generator_Window:
         self.verticalLayout_2 = QtWidgets.QVBoxLayout(self.centralwidget)
         self.verticalLayout_2.setObjectName(_fromUtf8("verticalLayout_2"))
         self.horizontalLayout = QtWidgets.QHBoxLayout()
-        self.horizontalLayout.setMargin(20)
+        # self.horizontalLayout.setMargin(20)
         self.horizontalLayout.setObjectName(_fromUtf8("horizontalLayout"))
         self.botao_novo_campo = QtWidgets.QPushButton(self.centralwidget)
         self.botao_novo_campo.setObjectName(_fromUtf8("botao_novo_campo"))

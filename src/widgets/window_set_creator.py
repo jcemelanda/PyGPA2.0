@@ -27,7 +27,6 @@ class Set_Creator_Window:
         self.groupBox.setObjectName(_fromUtf8("groupBox"))
         self.formLayout = QtWidgets.QFormLayout(self.groupBox)
         self.formLayout.setFieldGrowthPolicy(QtWidgets.QFormLayout.ExpandingFieldsGrow)
-        self.formLayout.setMargin(20)
         self.formLayout.setObjectName(_fromUtf8("formLayout"))
         self.lb_num = QtWidgets.QLabel(self.groupBox)
         self.lb_num.setObjectName(_fromUtf8("lb_num"))

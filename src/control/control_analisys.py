@@ -161,15 +161,14 @@ class Analise_Ctrl:
         self.normalizado = False
         self.matrizes = []
         fd = QtWidgets.QFileDialog()
-        file_path = fd.getOpenFileName(parent=None,
+        file_path, _ = fd.getOpenFileName(parent=None,
                                 caption=u'Abrir arquivo',
         filter=u'Dados textuais (*.txt *.dat);;Imagens (*.png *.bmp *.jpg)')
         if file_path[-3:] in ['png', 'jpg', 'bmp']:
             try:
-                im = Image.open(str(file_path), 'r')
+                im = Image.open(file_path, 'r')
                 mat = []
                 im = im.convert('L')
-                im.show()
                 w, h = im.size
                 mat = []
                 dlg = QtWidgets.QProgressDialog(u'Lendo Arquivo', u'Cancelar',
@@ -189,6 +188,7 @@ class Analise_Ctrl:
                         return
                 mat.reverse()
                 self.matriz = mat[:]
+                self.matrizes.append(self.matriz)
             except IOError as e:
                 print('Abertura de arquivo falhou ', e)
                 return
@@ -290,10 +290,9 @@ class Analise_Ctrl:
         else:
             mat = []
             for l in self.matriz[:]:
-                mat.append(list(zip(*l)[0]))
+                mat.append(list(next(zip(*l))))
             return mat
                 
-
     def get_dy(self):
         '''
         Gera uma matriz com as derivadas parciais em y para a matriz de
@@ -333,7 +332,7 @@ class Analise_Ctrl:
         else:
             mat = []
             for l in self.matriz[:]:
-                mat.append(list(zip(*l)[1]))
+                mat.append(list(list(zip(*l))[1]))
             return mat
         
     def normaliza_derivadas(self):
@@ -369,7 +368,7 @@ class Analise_Ctrl:
         self.anular()
 
         minx = -1
-        maxx = round(max(zip(*self.dx)[-1]))
+        maxx = round(max(list(zip(*self.dx))[-1]))
         miny = -1
         maxy = round(max(self.dy[-1]))
 
@@ -385,7 +384,9 @@ class Analise_Ctrl:
         '''
         Coloca norma zero para os pares de vetores que se anulam.
         '''
-        vects = [zip(x, y) for x, y in zip(self.dx, self.dy)]
+
+        vects = [list(zip(x, y)) for x, y in zip(self.dx, self.dy)]
+
         dlg = QtWidgets.QProgressDialog(u'Otimizando campo', u'Cancelar',
                                     0, len(vects))
         dlg.setModal(True)
@@ -408,7 +409,7 @@ class Analise_Ctrl:
             if dlg.wasCanceled():
                 return
         dlg.close()
-        del(dlg)
+        dlg.destroy
         v = [zip(*l) for l in vects]
         self.dx, self.dy = zip(*v)
         
@@ -417,7 +418,7 @@ class Analise_Ctrl:
         Gera a triangulação de Delaunay para o conjunto de dados,
         plota os triângulos e exibe o número de arestas encontradas
         '''
-        vects = [zip(x, y) for x, y in zip(self.dx, self.dy)]
+        vects = [list(zip(x, y)) for x, y in zip(self.dx, self.dy)]
         points = []
         for i in range(len(vects)):
             line = []
@@ -432,8 +433,8 @@ class Analise_Ctrl:
         t = tri.Triangulation(x, y)
         self.figuras_triang.append(Figure(dpi=120))
         axes = self.figuras_triang[-1].add_subplot(111, aspect='equal')
-        minx = round(min(zip(*self.dx)[0])) - 1
-        maxx = round(max(zip(*self.dx)[-1]))
+        minx = round(min(list(zip(*self.dx))[0])) - 1
+        maxx = round(max(list(zip(*self.dx))[-1]))
         miny = round(min(self.dy[0])) - 1
         maxy = round(max(self.dy[-1]))
         if miny >= 0:
@@ -450,21 +451,24 @@ class Analise_Ctrl:
         '''
         Gera todos os widgets dos gráficos que serão colocados nas telas
         '''
+
         for indice in range(len(self.matrizes)):
             graph_widget = Grafics_widget()
             graph_widget.setup()
             
-            widget_delaunay = FigureWidget(self.figuras_triang[indice])
-            widget_delaunay.setObjectName(_fromUtf8("widget_delaunay"))
-            widget_delaunay.setParent(graph_widget.groupBox_2)
-            graph_widget.gridLayout_4.addWidget(widget_delaunay, 0, 0, 1, 1)
+            graph_widget.label.setText("%1.6f" % self.GAs[indice])
             
             widget_vector = FigureWidget(self.figuras_vet[indice])
             widget_vector.setObjectName(_fromUtf8("widget_vector"))
             widget_vector.setParent(graph_widget.groupBox)
-            graph_widget.gridLayout_3.addWidget(widget_vector, 0, 0, 1, 1)
+
+            widget_delaunay = FigureWidget(self.figuras_triang[indice])
+            widget_delaunay.setObjectName(_fromUtf8("widget_delaunay"))
+            widget_delaunay.setParent(graph_widget.groupBox_2)
+
             
-            graph_widget.label.setText("%1.6f" % self.GAs[indice])
+            graph_widget.gridLayout_3.addWidget(widget_vector, 0, 0, 1, 1)
+            graph_widget.gridLayout_4.addWidget(widget_delaunay, 0, 0, 1, 1)
             
             vect_widget = Detail_widget()
             vect_widget.setup()

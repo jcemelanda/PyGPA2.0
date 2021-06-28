@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from PyQt5 import QtGui, QtCore
+from PyQt5 import QtCore, QtWidgets
 from widgets.window_set_creator import Set_Creator_Window
 
 try:
@@ -7,7 +7,7 @@ try:
 except AttributeError:
     _fromUtf8 = lambda s: s
     
-class Set_Creator_View(QtGui.QWindow):
+class Set_Creator_View(QtWidgets.QMainWindow):
     def __init__(self, controle):
         self.funcoes = {
                         0:self.set_aleatorio,
@@ -16,15 +16,13 @@ class Set_Creator_View(QtGui.QWindow):
                         3:self.set_fonte,
                         4:self.set_turbilhao}
         
-        QtGui.QWindow.__init__(self)
+        super().__init__()
         self.controle = controle
         self.ui = Set_Creator_Window()
         self.ui.setup(self)
         
-        QtCore.QObject.connect(self.ui.comboBox, QtCore.SIGNAL(_fromUtf8(
-                                    "currentIndexChanged(int)")), self.selecionado)
-        QtCore.QObject.connect(self.ui.bt_gerar, QtCore.SIGNAL(_fromUtf8(
-                                    "clicked()")), self.gerar_matrizes)
+        self.ui.comboBox.currentIndexChanged.connect(self.selecionado)
+        self.ui.bt_gerar.clicked.connect(self.gerar_matrizes)
         self.indice_selecionado = 0
         
     def selecionado(self, i):

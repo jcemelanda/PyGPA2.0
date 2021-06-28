@@ -138,7 +138,12 @@ class Generator_Ctrl:
         Remove uma entrada da lista de Campos de Gradientes
         '''
         i = self.ui.getListWidget().currentRow()
-        self.pilha.pop(i)
+        if self.pilha:
+            self.pilha.pop(i)
+        else:
+            message = QtWidgets.QMessageBox(self.ui)
+            message.setText('A lista de campos está vazia')
+            message.show()
         self.ui.getListWidget().takeItem(i)
         
     def limpa_lista(self):

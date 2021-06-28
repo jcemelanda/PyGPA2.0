@@ -14,6 +14,7 @@ class Gerador:
     '''
     Classe para gerar as matrizes dos campos de gradientes
     '''
+    
     @staticmethod
     def constante(n, altura, largura, angulo, constante):
         '''

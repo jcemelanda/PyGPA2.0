@@ -1,23 +1,20 @@
-from PyQt5 import QtWidgets, QtCore, QtGui
+from PyQt5 import QtWidgets, QtGui
 from widgets.window_analisys import Analysis_Window
 
-class Analise_View(QtGui.QWindow):
+class Analise_View(QtWidgets.QMainWindow):
     def __init__(self, controle):
-        QtGui.QWindow.__init__(self)
+        super().__init__()
         self.controle = controle
         self.ui = Analysis_Window()
         self.ui.setup(self)
         self.count = 3
-        self.shortcut_right = QtWidgets.QShortcut(QtWidgets.QKeySequence("l"), self, self.controle.incrementa_view)
-        self.shortcut_left = QtWidgets.QShortcut(QtWidgets.QKeySequence("j"), self, self.controle.decrementa_view)
-        self.shortcut_end = QtWidgets.QShortcut(QtWidgets.QKeySequence("end"), self, self.controle.last_view)
-        self.shortcut_home = QtWidgets.QShortcut(QtWidgets.QKeySequence("home"), self, self.controle.first_view)
-        QtCore.QObject.connect(self.ui.actionAbrir_Conjunto_de_Matrizes, QtCore.SIGNAL(
-                                    'triggered()'), self.controle.abrir_arquivo)
-        QtCore.QObject.connect(self.ui.horizontalSlider, QtCore.SIGNAL(
-                                    'valueChanged(int)'), self.controle.set_view)
-        QtCore.QObject.connect(self.ui.Tabs, QtCore.SIGNAL(
-                                    'currentChanged(int)'), self.controle.set_current_tab)
+        self.shortcut_right = QtWidgets.QShortcut(QtGui.QKeySequence("l"), self, self.controle.incrementa_view)
+        self.shortcut_left = QtWidgets.QShortcut(QtGui.QKeySequence("j"), self, self.controle.decrementa_view)
+        self.shortcut_end = QtWidgets.QShortcut(QtGui.QKeySequence("end"), self, self.controle.last_view)
+        self.shortcut_home = QtWidgets.QShortcut(QtGui.QKeySequence("home"), self, self.controle.first_view)
+        self.ui.actionAbrir_Conjunto_de_Matrizes.triggered.connect(self.controle.abrir_arquivo)
+        self.ui.horizontalSlider.valueChanged.connect(self.controle.set_view)
+        self.ui.Tabs.currentChanged.connect(self.controle.set_current_tab)
 
         
         

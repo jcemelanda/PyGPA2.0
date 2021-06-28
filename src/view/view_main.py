@@ -3,7 +3,7 @@ from widgets.window_start import Start_Window
 
 class Main_View(QtWidgets.QMainWindow):
     def __init__(self, controle):
-        QtGui.QWindow.__init__(self)
+        super().__init__()
         self.controle = controle
         self.ui = Start_Window()
         self.ui.setup(self)
