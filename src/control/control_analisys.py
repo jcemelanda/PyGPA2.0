@@ -64,7 +64,6 @@ class Analise_Ctrl:
         Muda o conjunto de dados sendo exibido para o próximo da ‭lista
         '''
         
-        print('incremented')
         self.pos += 1
         if self.current_tab == 0:
             self.ui.ui.stackedGraphics.setCurrentIndex(self.pos)
@@ -93,7 +92,6 @@ class Analise_Ctrl:
         Muda o conjunto de dados sendo exibido para o anterior da ‭lista
         '''
         
-        print('decremented')
         self.pos -= 1
         if self.current_tab == 0:
             self.ui.ui.stackedGraphics.setCurrentIndex(self.pos)
@@ -110,7 +108,7 @@ class Analise_Ctrl:
         '''
         Muda a exibição para o último conjunto da ‭lista
         '''
-        print('last')
+
         self.pos = self.ui.ui.stackedGraphics.count() - 1
         self.ui.ui.stackedGraphics.setCurrentIndex(self.pos)
         self.ui.ui.stackedVet.setCurrentIndex(self.pos)
@@ -122,7 +120,7 @@ class Analise_Ctrl:
         '''
         Muda a exibição para o prieiro conjunto da ‭lista
         '''
-        print('first')
+
         self.pos = 0
         self.ui.ui.stackedGraphics.setCurrentIndex(self.pos)
         self.ui.ui.stackedVet.setCurrentIndex(self.pos)
@@ -140,7 +138,6 @@ class Analise_Ctrl:
                 Posição da ‭lista que será exibida
         '''
         
-        print('set ', pos)
         self.pos = pos
         self.ui.ui.stackedGraphics.setCurrentIndex(self.pos)
         self.ui.ui.stackedVet.setCurrentIndex(self.pos)
@@ -194,13 +191,13 @@ class Analise_Ctrl:
                 return
         else:
             try:
-                f = open(str(file_path), 'r')
+                with open(file_path, 'r') as f:
+                    mat_lines = f.readlines()
             except IOError as e:
                 print('Abertura de arquivo falhou ', e)
                 return
             supermatriz = []
             matriz = []
-            mat_lines = f.readlines()
             self.matriz = []
             a = 0
             if mat_lines[-1] == '':
@@ -221,7 +218,6 @@ class Analise_Ctrl:
             matriz.reverse()
             supermatriz.append(matriz[:])
             
-            f.close()
             self.matrizes = supermatriz[:]
         self.processa_matrizes()
         
@@ -233,6 +229,7 @@ class Analise_Ctrl:
         Opera sobre o conjunto de matrizes gerando os vetores, 
         triangulações e widgets
         '''
+        
         for mat in self.matrizes:
             self.matriz = mat[:]
             self.gerar_vetores()
@@ -328,7 +325,7 @@ class Analise_Ctrl:
                 if dlg.wasCanceled():
                     return
             dlg.close()
-            return zip(*dy)
+            return list(zip(*dy))
         else:
             mat = []
             for l in self.matriz[:]:
@@ -353,8 +350,8 @@ class Analise_Ctrl:
             m = max([abs(l) for l in linha])
             if m > maximo:
                 maximo = m
-        self.dx = [[d / float(maximo) for d in linha] for linha in self.dx]
-        self.dy = [[d / float(maximo) for d in linha] for linha in self.dy]
+        self.dx = [[d / maximo for d in linha] for linha in self.dx]
+        self.dy = [[d / maximo for d in linha] for linha in self.dy]
       
     def gerar_vetores(self):
         '''
@@ -384,7 +381,6 @@ class Analise_Ctrl:
         '''
         Coloca norma zero para os pares de vetores que se anulam.
         '''
-
         vects = [list(zip(x, y)) for x, y in zip(self.dx, self.dy)]
 
         dlg = QtWidgets.QProgressDialog(u'Otimizando campo', u'Cancelar',
@@ -410,7 +406,7 @@ class Analise_Ctrl:
                 return
         dlg.close()
         dlg.destroy
-        v = [zip(*l) for l in vects]
+        v = [list(zip(*l)) for l in vects]
         self.dx, self.dy = zip(*v)
         
     def gerar_triangulacao(self):
@@ -445,7 +441,7 @@ class Analise_Ctrl:
         axes.set_ylim(miny, len(self.dx) + maxy)
         axes.triplot(t)
 
-        self.GAs.append((len(t.edges) - len(x)) / float(len(x)))
+        self.GAs.append((len(t.edges) - len(x)) / len(x))
         
     def gerar_widgets(self):
         '''

@@ -1042,4 +1042,3 @@ def str_mat(mat):
 if __name__ == '__main__':
     a = campo_aleatorio()
     a.set_mat([[[1, 2], [2, 3]],[[2, 1], [4, 3]]])
-    print(a)
