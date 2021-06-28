@@ -4,8 +4,8 @@ Módulo de controle do módulo de geração dos campos
 '''
 #==================================Imports=====================================#
 
-# Componentes PyQt4
-from PyQt4 import QtCore, QtGui
+# Componentes PyQt5
+from PyQt5 import QtCore, QtWidgets
 
 # Componentes internos
 from control.control_set_creator import Set_Creator_Ctrl
@@ -64,7 +64,7 @@ class Generator_Ctrl:
         if len(self.pilha) > 0:
             i = self.ui.getListWidget().currentRow()
             if i < 0:
-                message = QtGui.QMessageBox(self.ui)
+                message = QtWidgets.QMessageBox(self.ui)
                 message.setText('Selecione um elemento da lista para editar')
                 message.show()
                 pass
@@ -73,7 +73,7 @@ class Generator_Ctrl:
                 self.ctrl_set_creator = Set_Creator_Ctrl(self, campo)
                 self.status = 'edita'
         else:
-            message = QtGui.QMessageBox(self.ui)
+            message = QtWidgets.QMessageBox(self.ui)
             message.setText('Para inserir um campo, clique em Novo')
             message.show()
             pass
@@ -89,7 +89,7 @@ class Generator_Ctrl:
         i = self.ui.getListWidget().currentRow()
         self.pilha[i] = campo
         self.ui.getListWidget().takeItem(i)
-        self.ui.getListWidget().insertItem(i, QtGui.QListWidgetItem(_fromUtf8(nomes_dos_campos[campo.get_type()])))
+        self.ui.getListWidget().insertItem(i, QtWidgets.QListWidgetItem(_fromUtf8(nomes_dos_campos[campo.get_type()])))
         
     def add_novo_campo(self, campo):
         '''
@@ -100,7 +100,7 @@ class Generator_Ctrl:
                     um campo de gradientes
         '''
         self.pilha.insert(0, campo)
-        self.ui.getListWidget().insertItem(0, QtGui.QListWidgetItem(_fromUtf8(nomes_dos_campos[campo.get_type()])))
+        self.ui.getListWidget().insertItem(0, QtWidgets.QListWidgetItem(_fromUtf8(nomes_dos_campos[campo.get_type()])))
         
     def combina_campos(self):
         '''
@@ -138,7 +138,12 @@ class Generator_Ctrl:
         Remove uma entrada da lista de Campos de Gradientes
         '''
         i = self.ui.getListWidget().currentRow()
-        self.pilha.pop(i)
+        if self.pilha:
+            self.pilha.pop(i)
+        else:
+            message = QtWidgets.QMessageBox(self.ui)
+            message.setText('A lista de campos está vazia')
+            message.show()
         self.ui.getListWidget().takeItem(i)
         
     def limpa_lista(self):
