@@ -1,25 +1,20 @@
 # -*- coding: utf-8 -*-
-from PyQt4 import QtGui, QtCore
+from PyQt5 import QtWidgets
 from widgets.window_generator import Generator_Window
-class Generator_View(QtGui.QMainWindow):
+
+class Generator_View(QtWidgets.QMainWindow):
     def __init__(self, controle):
-        QtGui.QMainWindow.__init__(self)
+        super().__init__()
         self.controle = controle
         self.ui = Generator_Window()
         self.ui.setup(self)
         
-        QtCore.QObject.connect(self.ui.botao_editar, QtCore.SIGNAL(
-                                    'clicked()'), self.controle.atualizar_campo)
-        QtCore.QObject.connect(self.ui.botao_novo_campo, QtCore.SIGNAL(
-                                    'clicked()'), self.controle.gerar_novo_campo)
-        QtCore.QObject.connect(self.ui.botao_analisar, QtCore.SIGNAL(
-                                    'clicked()'), self.controle.analisar)
-        QtCore.QObject.connect(self.ui.botao_combinar, QtCore.SIGNAL(
-                                    'clicked()'), self.controle.combina_campos)
-        QtCore.QObject.connect(self.ui.botao_limpar, QtCore.SIGNAL(
-                                    'clicked()'), self.controle.limpa_lista)
-        QtCore.QObject.connect(self.ui.botao_remove, QtCore.SIGNAL(
-                                    'clicked()'), self.controle.remove_item)
+        self.ui.botao_editar.clicked.connect(self.controle.atualizar_campo)
+        self.ui.botao_novo_campo.clicked.connect(self.controle.gerar_novo_campo)
+        self.ui.botao_analisar.clicked.connect(self.controle.analisar)
+        self.ui.botao_combinar.clicked.connect(self.controle.combina_campos)
+        self.ui.botao_limpar.clicked.connect(self.controle.limpa_lista)
+        self.ui.botao_remove.clicked.connect(self.controle.remove_item)
 
     def getListWidget(self):
         return self.ui.listWidget

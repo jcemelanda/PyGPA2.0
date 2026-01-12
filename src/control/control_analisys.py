@@ -4,13 +4,13 @@ Módulo de controle do módulo de análise
 '''
 #==================================Imports=====================================#
 
-# Componentes PyQt4
-from PyQt4 import QtGui, QtCore
+# Componentes PyQt5
+from PyQt5 import QtWidgets, QtCore
 
 # Componentes Matplotlib
 from matplotlib import tri
-from matplotlib.backends.backend_qt4agg import FigureCanvasQTAgg \
-    as FigureWidget, NavigationToolbar2QTAgg as Navbar
+from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg \
+    as FigureWidget, NavigationToolbar2QT as Navbar
 from matplotlib.figure import Figure
 
 # Componentes internos
@@ -19,7 +19,7 @@ from widgets.widget_detail import Detail_widget
 from widgets.widget_graphs import Grafics_widget
 
 # PIL
-import Image
+from PIL import Image
 
 # Standard Library
 import time
@@ -64,7 +64,6 @@ class Analise_Ctrl:
         Muda o conjunto de dados sendo exibido para o próximo da ‭lista
         '''
         
-        print 'incremented'
         self.pos += 1
         if self.current_tab == 0:
             self.ui.ui.stackedGraphics.setCurrentIndex(self.pos)
@@ -93,7 +92,6 @@ class Analise_Ctrl:
         Muda o conjunto de dados sendo exibido para o anterior da ‭lista
         '''
         
-        print 'decremented'
         self.pos -= 1
         if self.current_tab == 0:
             self.ui.ui.stackedGraphics.setCurrentIndex(self.pos)
@@ -110,7 +108,7 @@ class Analise_Ctrl:
         '''
         Muda a exibição para o último conjunto da ‭lista
         '''
-        print 'last'
+
         self.pos = self.ui.ui.stackedGraphics.count() - 1
         self.ui.ui.stackedGraphics.setCurrentIndex(self.pos)
         self.ui.ui.stackedVet.setCurrentIndex(self.pos)
@@ -122,7 +120,7 @@ class Analise_Ctrl:
         '''
         Muda a exibição para o prieiro conjunto da ‭lista
         '''
-        print 'first'
+
         self.pos = 0
         self.ui.ui.stackedGraphics.setCurrentIndex(self.pos)
         self.ui.ui.stackedVet.setCurrentIndex(self.pos)
@@ -140,7 +138,6 @@ class Analise_Ctrl:
                 Posição da ‭lista que será exibida
         '''
         
-        print 'set ' + str(pos)
         self.pos = pos
         self.ui.ui.stackedGraphics.setCurrentIndex(self.pos)
         self.ui.ui.stackedVet.setCurrentIndex(self.pos)
@@ -160,28 +157,27 @@ class Analise_Ctrl:
         self.figuras_GA = []
         self.normalizado = False
         self.matrizes = []
-        fd = QtGui.QFileDialog()
-        file_path = fd.getOpenFileName(parent=None,
+        fd = QtWidgets.QFileDialog()
+        file_path, _ = fd.getOpenFileName(parent=None,
                                 caption=u'Abrir arquivo',
         filter=u'Dados textuais (*.txt *.dat);;Imagens (*.png *.bmp *.jpg)')
         if file_path[-3:] in ['png', 'jpg', 'bmp']:
             try:
-                im = Image.open(str(file_path), 'r')
+                im = Image.open(file_path, 'r')
                 mat = []
                 im = im.convert('L')
-                im.show()
                 w, h = im.size
                 mat = []
-                dlg = QtGui.QProgressDialog(u'Lendo Arquivo', u'Cancelar',
+                dlg = QtWidgets.QProgressDialog(u'Lendo Arquivo', u'Cancelar',
                                         0, h)
                 dlg.setModal(True)
                 dlg.setMinimumDuration(0)
                 dlg.setAutoClose(True)
                 dlg.setWindowTitle(u'Leitura de Arquivo')
                 dlg.show()
-                for i in xrange(h):
+                for i in range(h):
                     line = []
-                    for j in xrange(w):
+                    for j in range(w):
                         line.append(im.getpixel((j, i)))
                     mat.append(line)
                     dlg.setValue(i)
@@ -189,18 +185,19 @@ class Analise_Ctrl:
                         return
                 mat.reverse()
                 self.matriz = mat[:]
+                self.matrizes.append(self.matriz)
             except IOError as e:
-                print('Abertura de arquivo falhou ' + str(e))
+                print('Abertura de arquivo falhou ', e)
                 return
         else:
             try:
-                f = open(str(file_path), 'r')
+                with open(file_path, 'r') as f:
+                    mat_lines = f.readlines()
             except IOError as e:
-                print('Abertura de arquivo falhou ' + str(e))
+                print('Abertura de arquivo falhou ', e)
                 return
             supermatriz = []
             matriz = []
-            mat_lines = f.readlines()
             self.matriz = []
             a = 0
             if mat_lines[-1] == '':
@@ -221,7 +218,6 @@ class Analise_Ctrl:
             matriz.reverse()
             supermatriz.append(matriz[:])
             
-            f.close()
             self.matrizes = supermatriz[:]
         self.processa_matrizes()
         
@@ -233,6 +229,7 @@ class Analise_Ctrl:
         Opera sobre o conjunto de matrizes gerando os vetores, 
         triangulações e widgets
         '''
+        
         for mat in self.matrizes:
             self.matriz = mat[:]
             self.gerar_vetores()
@@ -262,7 +259,7 @@ class Analise_Ctrl:
         
         if self.ABERTURA == 'normal':
             dx = []
-            dlg = QtGui.QProgressDialog(u'Calculando dx', u'Cancelar',
+            dlg = QtWidgets.QProgressDialog(u'Calculando dx', u'Cancelar',
                                         0, len(self.matriz[:-1]))
             dlg.setModal(True)
             dlg.setMinimumDuration(0)
@@ -273,7 +270,7 @@ class Analise_Ctrl:
 
             for linha in self.matriz[:]:
                 linha_dx = []
-                for i in xrange(len(linha)):
+                for i in range(len(linha)):
                     if i == 0:
                         linha_dx.append(
                                 (-3 * linha[0] + 4 * linha[1] - linha[2]) / 2.0)
@@ -290,10 +287,9 @@ class Analise_Ctrl:
         else:
             mat = []
             for l in self.matriz[:]:
-                mat.append(list(zip(*l)[0]))
+                mat.append(list(next(zip(*l))))
             return mat
                 
-
     def get_dy(self):
         '''
         Gera uma matriz com as derivadas parciais em y para a matriz de
@@ -304,7 +300,7 @@ class Analise_Ctrl:
         '''
         if self.ABERTURA == 'normal':
             dy = []
-            dlg = QtGui.QProgressDialog(u'Calculando dy', u'Cancelar',
+            dlg = QtWidgets.QProgressDialog(u'Calculando dy', u'Cancelar',
                                         0, len(self.matriz[:-1]))
             dlg.setModal(True)
             dlg.setMinimumDuration(0)
@@ -314,7 +310,7 @@ class Analise_Ctrl:
             a = 0
             for linha in zip(*self.matriz[:]):
                 linha_dy = []
-                for i in xrange(len(linha)):
+                for i in range(len(linha)):
                     if i == 0:
                         linha_dy.append(
                                         (-3 * linha[0] + 4 * linha[1] - linha[2]) / 2.0)
@@ -329,11 +325,11 @@ class Analise_Ctrl:
                 if dlg.wasCanceled():
                     return
             dlg.close()
-            return zip(*dy)
+            return list(zip(*dy))
         else:
             mat = []
             for l in self.matriz[:]:
-                mat.append(list(zip(*l)[1]))
+                mat.append(list(list(zip(*l))[1]))
             return mat
         
     def normaliza_derivadas(self):
@@ -354,8 +350,8 @@ class Analise_Ctrl:
             m = max([abs(l) for l in linha])
             if m > maximo:
                 maximo = m
-        self.dx = [[d / float(maximo) for d in linha] for linha in self.dx]
-        self.dy = [[d / float(maximo) for d in linha] for linha in self.dy]
+        self.dx = [[d / maximo for d in linha] for linha in self.dx]
+        self.dy = [[d / maximo for d in linha] for linha in self.dy]
       
     def gerar_vetores(self):
         '''
@@ -369,7 +365,7 @@ class Analise_Ctrl:
         self.anular()
 
         minx = -1
-        maxx = round(max(zip(*self.dx)[-1]))
+        maxx = round(max(list(zip(*self.dx))[-1]))
         miny = -1
         maxy = round(max(self.dy[-1]))
 
@@ -385,18 +381,19 @@ class Analise_Ctrl:
         '''
         Coloca norma zero para os pares de vetores que se anulam.
         '''
-        vects = [zip(x, y) for x, y in zip(self.dx, self.dy)]
-        dlg = QtGui.QProgressDialog(u'Otimizando campo', u'Cancelar',
+        vects = [list(zip(x, y)) for x, y in zip(self.dx, self.dy)]
+
+        dlg = QtWidgets.QProgressDialog(u'Otimizando campo', u'Cancelar',
                                     0, len(vects))
         dlg.setModal(True)
         dlg.setMinimumDuration(0)
         dlg.setAutoClose(True)
         dlg.setWindowTitle(u'Eliminar vetores')
         dlg.show()
-        for i in xrange(len(vects)):
-            for j in xrange(len(vects[0])):
-                for k in xrange(i, len(vects)):
-                    for w in xrange(len(vects[0])):
+        for i in range(len(vects)):
+            for j in range(len(vects[0])):
+                for k in range(i, len(vects)):
+                    for w in range(len(vects[0])):
                         a = vects[i][j]
                         b = vects[k][w]
                         if a == (0, 0):
@@ -408,8 +405,8 @@ class Analise_Ctrl:
             if dlg.wasCanceled():
                 return
         dlg.close()
-        del(dlg)
-        v = [zip(*l) for l in vects]
+        dlg.destroy
+        v = [list(zip(*l)) for l in vects]
         self.dx, self.dy = zip(*v)
         
     def gerar_triangulacao(self):
@@ -417,11 +414,11 @@ class Analise_Ctrl:
         Gera a triangulação de Delaunay para o conjunto de dados,
         plota os triângulos e exibe o número de arestas encontradas
         '''
-        vects = [zip(x, y) for x, y in zip(self.dx, self.dy)]
+        vects = [list(zip(x, y)) for x, y in zip(self.dx, self.dy)]
         points = []
-        for i in xrange(len(vects)):
+        for i in range(len(vects)):
             line = []
-            for j in xrange(len(vects[0])):
+            for j in range(len(vects[0])):
                 x, y = vects[i][j]
                 if (abs(x) > 0.0) or (abs(y) > 0.0):
                     if [x + j, y + i] not in points:
@@ -432,8 +429,8 @@ class Analise_Ctrl:
         t = tri.Triangulation(x, y)
         self.figuras_triang.append(Figure(dpi=120))
         axes = self.figuras_triang[-1].add_subplot(111, aspect='equal')
-        minx = round(min(zip(*self.dx)[0])) - 1
-        maxx = round(max(zip(*self.dx)[-1]))
+        minx = round(min(list(zip(*self.dx))[0])) - 1
+        maxx = round(max(list(zip(*self.dx))[-1]))
         miny = round(min(self.dy[0])) - 1
         maxy = round(max(self.dy[-1]))
         if miny >= 0:
@@ -444,27 +441,30 @@ class Analise_Ctrl:
         axes.set_ylim(miny, len(self.dx) + maxy)
         axes.triplot(t)
 
-        self.GAs.append((len(t.edges) - len(x)) / float(len(x)))
+        self.GAs.append((len(t.edges) - len(x)) / len(x))
         
     def gerar_widgets(self):
         '''
         Gera todos os widgets dos gráficos que serão colocados nas telas
         '''
+
         for indice in range(len(self.matrizes)):
             graph_widget = Grafics_widget()
             graph_widget.setup()
             
-            widget_delaunay = FigureWidget(self.figuras_triang[indice])
-            widget_delaunay.setObjectName(_fromUtf8("widget_delaunay"))
-            widget_delaunay.setParent(graph_widget.groupBox_2)
-            graph_widget.gridLayout_4.addWidget(widget_delaunay, 0, 0, 1, 1)
+            graph_widget.label.setText("%1.6f" % self.GAs[indice])
             
             widget_vector = FigureWidget(self.figuras_vet[indice])
             widget_vector.setObjectName(_fromUtf8("widget_vector"))
             widget_vector.setParent(graph_widget.groupBox)
-            graph_widget.gridLayout_3.addWidget(widget_vector, 0, 0, 1, 1)
+
+            widget_delaunay = FigureWidget(self.figuras_triang[indice])
+            widget_delaunay.setObjectName(_fromUtf8("widget_delaunay"))
+            widget_delaunay.setParent(graph_widget.groupBox_2)
+
             
-            graph_widget.label.setText("%1.6f" % self.GAs[indice])
+            graph_widget.gridLayout_3.addWidget(widget_vector, 0, 0, 1, 1)
+            graph_widget.gridLayout_4.addWidget(widget_delaunay, 0, 0, 1, 1)
             
             vect_widget = Detail_widget()
             vect_widget.setup()

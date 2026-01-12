@@ -1031,9 +1031,9 @@ def str_mat(mat):
     Cria uma versão textual de uma matriz bidimensional
     '''
     t = '[\n'
-    for i in xrange(len(mat)):
+    for i in range(len(mat)):
         t += '[ '
-        for j in xrange(len(mat[0])):
+        for j in range(len(mat[0])):
             t += str(mat[i][j])+' '
         t+=']\n'
     t += ']'
@@ -1042,4 +1042,3 @@ def str_mat(mat):
 if __name__ == '__main__':
     a = campo_aleatorio()
     a.set_mat([[[1, 2], [2, 3]],[[2, 1], [4, 3]]])
-    print(a)

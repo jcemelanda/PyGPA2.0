@@ -4,8 +4,8 @@ Módulo de controle do módulo que gera os campos
 '''
 #==================================Imports=====================================#
 
-# Componentes PyQt4
-from PyQt4 import QtCore
+# Componentes PyQt5
+from PyQt5 import QtCore
 
 #Componentes internos
 from models.campos import campo_aleatorio, campo_constante, campo_doublet, \
