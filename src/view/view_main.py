@@ -1,4 +1,4 @@
-from PyQt5 import QtGui, QtCore, QtWidgets
+from PyQt6 import QtGui, QtCore, QtWidgets
 from widgets.window_start import Start_Window
 
 class Main_View(QtWidgets.QMainWindow):
@@ -19,4 +19,4 @@ if __name__ == '__main__':
     av = Main_View()
     av.add_widgets()
     av.showMaximized()
-    sys.exit(app.exec_())
+    sys.exit(app.exec())

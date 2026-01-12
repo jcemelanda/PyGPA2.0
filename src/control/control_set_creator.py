@@ -4,8 +4,8 @@ Módulo de controle do módulo que gera os campos
 '''
 #==================================Imports=====================================#
 
-# Componentes PyQt5
-from PyQt5 import QtCore
+# Componentes PyQt6
+from PyQt6 import QtCore
 
 #Componentes internos
 from models.campos import campo_aleatorio, campo_constante, campo_doublet, \
@@ -13,13 +13,6 @@ from models.campos import campo_aleatorio, campo_constante, campo_doublet, \
 from utils.Gerador import Gerador
 from view.view_set_creator import Set_Creator_View
 
-#=======================Preparação de ambiente da classe=======================#
-
-# Configura conversão pra Unicode
-try:
-    _fromUtf8 = QtCore.QString.fromUtf8
-except AttributeError:
-    _fromUtf8 = lambda s: s
 
 class Set_Creator_Ctrl:
     '''

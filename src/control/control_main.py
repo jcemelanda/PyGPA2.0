@@ -4,8 +4,8 @@ Módulo de controle do módulo principal
 '''
 #==================================Imports=====================================#
 
-# Componentes PyQt5
-from PyQt5 import QtWidgets, QtCore
+# Componentes PyQt6
+from PyQt6 import QtWidgets, QtCore
 
 # Standard Library
 import sys
@@ -14,14 +14,6 @@ import sys
 from view.view_main import Main_View
 from control.control_analisys import Analise_Ctrl
 from control.control_generator import Generator_Ctrl
-
-#=======================Preparação de ambiente da classe=======================#
-
-# Configura conversão pra Unicode
-try:
-    _fromUtf8 = QtCore.QString.fromUtf8
-except AttributeError:
-    _fromUtf8 = lambda s: s
 
 class Main_Ctrl:
     '''
@@ -36,7 +28,7 @@ class Main_Ctrl:
         app = QtWidgets.QApplication(sys.argv)
         self.ui = Main_View(self)
         self.ui.showMaximized()
-        sys.exit(app.exec_())
+        sys.exit(app.exec())
         
     def abrir_gerador(self, arg):
         '''

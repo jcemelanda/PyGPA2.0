@@ -197,8 +197,8 @@ class Gerador:
         '''
         return [[[(x, y) for (x, y) in 
                   zip(
-                      [randrange(-1e3, 1e3) / 1000.0 for a in range(largura)],
-                      [randrange(-1e3, 1e3) / 1000.0 for b in range(largura)]
+                      [randrange(-1000, 1000) / 1000.0 for a in range(largura)],
+                      [randrange(-1000, 1000) / 1000.0 for b in range(largura)]
                       )] 
                  for j in range(largura)] 
                  for k in range(n)] 

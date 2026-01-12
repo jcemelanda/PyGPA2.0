@@ -4,12 +4,12 @@ Módulo de controle do módulo de análise
 '''
 #==================================Imports=====================================#
 
-# Componentes PyQt5
-from PyQt5 import QtWidgets, QtCore
+# Componentes PyQt6
+from PyQt6 import QtWidgets, QtCore
 
 # Componentes Matplotlib
 from matplotlib import tri
-from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg \
+from matplotlib.backends.backend_qtagg import FigureCanvasQTAgg \
     as FigureWidget, NavigationToolbar2QT as Navbar
 from matplotlib.figure import Figure
 
@@ -23,14 +23,6 @@ from PIL import Image
 
 # Standard Library
 import time
-
-#=======================Preparação de ambiente da classe=======================#
-
-# Configura conversão pra Unicode
-try:
-    _fromUtf8 = QtCore.QString.fromUtf8
-except AttributeError:
-    _fromUtf8 = lambda s: s
 
 
 class Analise_Ctrl:
@@ -455,11 +447,11 @@ class Analise_Ctrl:
             graph_widget.label.setText("%1.6f" % self.GAs[indice])
             
             widget_vector = FigureWidget(self.figuras_vet[indice])
-            widget_vector.setObjectName(_fromUtf8("widget_vector"))
+            widget_vector.setObjectName("widget_vector")
             widget_vector.setParent(graph_widget.groupBox)
 
             widget_delaunay = FigureWidget(self.figuras_triang[indice])
-            widget_delaunay.setObjectName(_fromUtf8("widget_delaunay"))
+            widget_delaunay.setObjectName("widget_delaunay")
             widget_delaunay.setParent(graph_widget.groupBox_2)
 
             
@@ -470,7 +462,7 @@ class Analise_Ctrl:
             vect_widget.setup()
             
             widget_vector_tab = FigureWidget(self.figuras_vet[indice])
-            widget_vector_tab.setObjectName(_fromUtf8("widget_vector_tab"))
+            widget_vector_tab.setObjectName("widget_vector_tab")
             widget_vector_tab.setParent(vect_widget.groupBox)
             vect_widget.gridLayout_1.addWidget(widget_vector_tab, 0, 0, 1, 1)
             
@@ -481,7 +473,7 @@ class Analise_Ctrl:
             trian_widget.setup()
             
             widget_delaunay_tab = FigureWidget(self.figuras_triang[indice])
-            widget_delaunay_tab.setObjectName(_fromUtf8("widget_delaunay_tab"))
+            widget_delaunay_tab.setObjectName("widget_delaunay_tab")
             widget_delaunay_tab.setParent(trian_widget.groupBox)
             trian_widget.gridLayout_1.addWidget(widget_delaunay_tab, 0, 0, 1, 1)
             
@@ -489,7 +481,7 @@ class Analise_Ctrl:
             trian_widget.gridLayout_2.addWidget(navbar_delaunay, 0, 0, 1, 1)
         
             widget_gpa_ev = FigureWidget(self.figuras_GA[indice])
-            widget_gpa_ev.setObjectName(_fromUtf8("widget_gpa_ev"))
+            widget_gpa_ev.setObjectName("widget_gpa_ev")
             widget_gpa_ev.setParent(self.ui.ui.GPAGraphGroup)
             
             self.ui.ui.stackedGraphics.addWidget(graph_widget)

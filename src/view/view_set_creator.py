@@ -1,12 +1,8 @@
 # -*- coding: utf-8 -*-
-from PyQt5 import QtCore, QtWidgets
+from PyQt6 import QtCore, QtWidgets
 from widgets.window_set_creator import Set_Creator_Window
 
-try:
-    _fromUtf8 = QtCore.QString.fromUtf8
-except AttributeError:
-    _fromUtf8 = lambda s: s
-    
+ 
 class Set_Creator_View(QtWidgets.QMainWindow):
     def __init__(self, controle):
         self.funcoes = {
@@ -74,8 +70,8 @@ class Set_Creator_View(QtWidgets.QMainWindow):
         self.ui.ini_x.setVisible(False)
         self.ui.ini_y.setVisible(False)
         
-        self.ui.lb_const_1.setText(_fromUtf8('Constante'))
-        self.ui.lb_const_2.setText(_fromUtf8('Ângulo'))
+        self.ui.lb_const_1.setText('Constante')
+        self.ui.lb_const_2.setText('Ângulo')
     
     def set_fonte(self):
         self.ui.lb_const_1.setVisible(True)
@@ -88,7 +84,7 @@ class Set_Creator_View(QtWidgets.QMainWindow):
         self.ui.ini_x.setVisible(True)
         self.ui.ini_y.setVisible(True)
         
-        self.ui.lb_const_1.setText(_fromUtf8('Magnitude'))
+        self.ui.lb_const_1.setText('Magnitude')
         
     def set_doublet(self):
         self.ui.lb_const_1.setVisible(True)
@@ -101,7 +97,7 @@ class Set_Creator_View(QtWidgets.QMainWindow):
         self.ui.ini_x.setVisible(True)
         self.ui.ini_y.setVisible(True)
         
-        self.ui.lb_const_1.setText(_fromUtf8('Magnitude (complexo a+bj)'))
+        self.ui.lb_const_1.setText('Magnitude (complexo a+bj)')
         
     def set_turbilhao(self):
         self.ui.lb_const_1.setVisible(True)
@@ -114,8 +110,8 @@ class Set_Creator_View(QtWidgets.QMainWindow):
         self.ui.ini_x.setVisible(True)
         self.ui.ini_y.setVisible(True)
         
-        self.ui.lb_const_1.setText(_fromUtf8('Magnitude'))
-        self.ui.lb_const_2.setText(_fromUtf8('Posição (complexo a+bj)'))
+        self.ui.lb_const_1.setText('Magnitude')
+        self.ui.lb_const_2.setText('Posição (complexo a+bj)')
         
     def gerar_matrizes(self):
         self.controle.gerar_matrizes()

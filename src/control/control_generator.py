@@ -4,8 +4,8 @@ Módulo de controle do módulo de geração dos campos
 '''
 #==================================Imports=====================================#
 
-# Componentes PyQt5
-from PyQt5 import QtCore, QtWidgets
+# Componentes PyQt6
+from PyQt6 import QtCore, QtWidgets
 
 # Componentes internos
 from control.control_set_creator import Set_Creator_Ctrl
@@ -14,13 +14,6 @@ from models.campos import campo_combinado
 from utils.Constants import nomes_dos_campos
 from view.view_generator import Generator_View
 
-#=======================Preparação de ambiente da classe=======================#
-
-# Configura conversão pra Unicode
-try:
-    _fromUtf8 = QtCore.QString.fromUtf8
-except AttributeError:
-    _fromUtf8 = lambda s: s
 
 class Generator_Ctrl:
     '''
@@ -89,7 +82,7 @@ class Generator_Ctrl:
         i = self.ui.getListWidget().currentRow()
         self.pilha[i] = campo
         self.ui.getListWidget().takeItem(i)
-        self.ui.getListWidget().insertItem(i, QtWidgets.QListWidgetItem(_fromUtf8(nomes_dos_campos[campo.get_type()])))
+        self.ui.getListWidget().insertItem(i, QtWidgets.QListWidgetItem(nomes_dos_campos[campo.get_type()]))
         
     def add_novo_campo(self, campo):
         '''
@@ -100,7 +93,7 @@ class Generator_Ctrl:
                     um campo de gradientes
         '''
         self.pilha.insert(0, campo)
-        self.ui.getListWidget().insertItem(0, QtWidgets.QListWidgetItem(_fromUtf8(nomes_dos_campos[campo.get_type()])))
+        self.ui.getListWidget().insertItem(0, QtWidgets.QListWidgetItem(nomes_dos_campos[campo.get_type()]))
         
     def combina_campos(self):
         '''
