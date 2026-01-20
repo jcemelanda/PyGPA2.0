@@ -9,7 +9,7 @@
 
 from PyQt6 import QtCore, QtGui, QtWidgets
 
-class Set_Creator_Window:
+class SetCreatorWindow:
         
     def setup(self, MainWindow):
         MainWindow.setObjectName("MainWindow")

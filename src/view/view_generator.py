@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
 from PyQt6 import QtWidgets
-from widgets.window_generator import Generator_Window
+from widgets.window_generator import GeneratorWindow
 
-class Generator_View(QtWidgets.QMainWindow):
+class GeneratorView(QtWidgets.QMainWindow):
     def __init__(self, controle):
         super().__init__()
         self.controle = controle
-        self.ui = Generator_Window()
+        self.ui = GeneratorWindow()
         self.ui.setup(self)
         
         self.ui.botao_editar.clicked.connect(self.controle.atualizar_campo)
@@ -16,5 +16,6 @@ class Generator_View(QtWidgets.QMainWindow):
         self.ui.botao_limpar.clicked.connect(self.controle.limpa_lista)
         self.ui.botao_remove.clicked.connect(self.controle.remove_item)
 
-    def getListWidget(self):
+    @property
+    def list_widget(self):
         return self.ui.listWidget

@@ -1,11 +1,11 @@
 from PyQt6 import QtGui, QtCore, QtWidgets
-from widgets.window_start import Start_Window
+from widgets.window_start import StartWindow
 
-class Main_View(QtWidgets.QMainWindow):
+class MainView(QtWidgets.QMainWindow):
     def __init__(self, controle):
         super().__init__()
         self.controle = controle
-        self.ui = Start_Window()
+        self.ui = StartWindow()
         self.ui.setup(self)
 
         self.ui.botao_editar.clicked.connect(self.controle.abrir_gerador)
@@ -16,7 +16,7 @@ class Main_View(QtWidgets.QMainWindow):
 if __name__ == '__main__':
     import sys
     app = QtWidgets.QApplication(sys.argv)
-    av = Main_View()
+    av = MainView()
     av.add_widgets()
     av.showMaximized()
     sys.exit(app.exec())

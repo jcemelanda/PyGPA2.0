@@ -11,11 +11,11 @@ from PyQt6 import QtWidgets, QtCore
 import sys
 
 #Componentes Locais
-from view.view_main import Main_View
-from control.control_analisys import Analise_Ctrl
-from control.control_generator import Generator_Ctrl
+from view.view_main import MainView
+from control.control_analisys import AnaliseCtrl
+from control.control_generator import GeneratorCtrl
 
-class Main_Ctrl:
+class MainCtrl:
     '''
     Controla o módulo de seleção de funções onde o usuário escolhe entre
     gerar dados ou analisálos
@@ -26,7 +26,7 @@ class Main_Ctrl:
         o ciclo de vida da aplicação
         '''
         app = QtWidgets.QApplication(sys.argv)
-        self.ui = Main_View(self)
+        self.ui = MainView(self)
         self.ui.showMaximized()
         sys.exit(app.exec())
         
@@ -34,10 +34,10 @@ class Main_Ctrl:
         '''
         Chama o módulo de geração de campos de gradientes
         '''
-        Generator_Ctrl()
+        GeneratorCtrl()
 
     def abrir_analisador(self, arg):
         '''
         Chama o módulo de análise de campos gradientes
         '''
-        Analise_Ctrl()
+        AnaliseCtrl()

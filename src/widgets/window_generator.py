@@ -9,7 +9,7 @@
 
 from PyQt6 import QtCore, QtGui, QtWidgets
 
-class Generator_Window:
+class GeneratorWindow:
     def setup(self, MainWindow):
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
@@ -65,7 +65,7 @@ if __name__ == "__main__":
     import sys
     app = QtWidgets.QApplication(sys.argv)
     MainWindow = QtWidgets.QMainWindow()
-    ui = Generator_Window()
+    ui = GeneratorWindow()
     ui.setup(MainWindow)
     MainWindow.show()
     sys.exit(app.exec())

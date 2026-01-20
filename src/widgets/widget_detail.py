@@ -9,7 +9,7 @@
 
 from PyQt6 import QtCore, QtGui, QtWidgets
 
-class Detail_widget(QtWidgets.QWidget):
+class DetailWidget(QtWidgets.QWidget):
     def setup(self):
         self.gridLayout = QtWidgets.QGridLayout(self)
         self.gridLayout.setObjectName("gridLayout")
@@ -39,7 +39,7 @@ if __name__ == "__main__":
     import sys
     app = QtWidgets.QApplication(sys.argv)
     self = QtWidgets.QWidget()
-    ui = Detail_widget()
+    ui = DetailWidget()
     ui.setup()
     ui.show()
     sys.exit(app.exec())

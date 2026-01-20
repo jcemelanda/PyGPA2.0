@@ -1,3 +1,4 @@
-from control.control_main import Main_Ctrl
+from control.control_main import MainCtrl
 
-Main_Ctrl()
+if __name__ == '__main__':
+    MainCtrl()

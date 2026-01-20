@@ -8,13 +8,13 @@ Módulo de controle do módulo que gera os campos
 from PyQt6 import QtCore
 
 #Componentes internos
-from models.campos import campo_aleatorio, campo_constante, campo_doublet, \
-    campo_fonte, campo_turbilhao
+from models.campos import CampoAleatorio, CampoConstante, CampoDoublet, \
+    CampoFonte, CampoTurbilhao
 from utils.Gerador import Gerador
-from view.view_set_creator import Set_Creator_View
+from view.view_set_creator import SetCreatorView
 
 
-class Set_Creator_Ctrl:
+class SetCreatorCtrl:
     '''
     Controla a interface de criação de conjuntos de dados,
     '''
@@ -23,11 +23,11 @@ class Set_Creator_Ctrl:
         Inicia as veriáveis e atributos da classe e instancia a interface 
         gráfica
         params:
-            gen_ctrl -> Generator_Ctrl
+            gen_ctrl -> GeneratorCtrl
                 Instância do controlador de geração de campos que armazena os 
                 campos gerados aqui
-            campo -> campo_aleatorio, campo_constante, campo_turbilhao, 
-                campo_doublet
+            campo -> CampoAleatorio, CampoConstante, CampoTurbilhao, 
+                CampoDoublet
                 opcional - campo recebido para edição de seus dados
         '''
         self.funcoes = {
@@ -37,7 +37,7 @@ class Set_Creator_Ctrl:
                         3:self.gera_fonte,
                         4:self.gera_turbilhao
                         }
-        self.ui = Set_Creator_View(self)
+        self.ui = SetCreatorView(self)
         self.ui.showMaximized()
         self.ctrl = gen_ctrl
         if campo != None:
@@ -46,10 +46,10 @@ class Set_Creator_Ctrl:
     def gerar_matrizes(self):
         '''
         Gera as matrizes e coloca o campo gerado na lista de campos do 
-        Generator_Ctrl
+        GeneratorCtrl
         '''
         
-        self.ctrl.recebe_campo(self.funcoes[self.ui.get_indice_selecionado()]())
+        self.ctrl.recebe_campo(self.funcoes[self.ui.indice_selecionado]())
         
      
     def gera_aleatorio(self):
@@ -59,13 +59,13 @@ class Set_Creator_Ctrl:
             campos_aleatorio
                 Campo aleatório gerado
         '''
-        n = eval(str(self.ui.get_num_mat()))
-        altura = eval(str(self.ui.get_altura()))
-        largura = eval(str(self.ui.get_largura()))
+        n = eval(str(self.ui.num_mat))
+        altura = eval(str(self.ui.altura))
+        largura = eval(str(self.ui.largura))
         
         mat = Gerador.aleatorio(n, altura, largura)
         
-        return campo_aleatorio(n, altura, largura, mat[:])
+        return CampoAleatorio(n, altura, largura, mat[:])
     
     def gera_constante(self):
         '''
@@ -75,14 +75,14 @@ class Set_Creator_Ctrl:
                 Campos constante gerado
         '''
         
-        n = eval(str(self.ui.get_num_mat()))
-        altura = eval(str(self.ui.get_altura()))
-        largura = eval(str(self.ui.get_largura()))
-        constante = eval(str(self.ui.get_const_1()))
-        angulo = eval(str(self.ui.get_const_2()))
+        n = eval(str(self.ui.num_mat))
+        altura = eval(str(self.ui.altura))
+        largura = eval(str(self.ui.largura))
+        constante = eval(str(self.ui.const_1))
+        angulo = eval(str(self.ui.const_2))
         
         mat = Gerador.constante(n, altura, largura, angulo, constante)
-        return campo_constante(n, altura, largura, constante, angulo, mat)
+        return CampoConstante(n, altura, largura, constante, angulo, mat)
         
     def gera_doublet(self):
         '''
@@ -92,15 +92,15 @@ class Set_Creator_Ctrl:
                 Campo Doublet Gerado
         '''
         
-        n = eval(str(self.ui.get_num_mat()))
-        altura = eval(str(self.ui.get_altura()))
-        largura = eval(str(self.ui.get_largura()))
-        magnitude = eval(str(self.ui.get_const_1()))
-        inicio = complex(eval(str(self.ui.get_ini_x())),
-                  eval(str(self.ui.get_ini_y())))
+        n = eval(str(self.ui.num_mat))
+        altura = eval(str(self.ui.altura))
+        largura = eval(str(self.ui.largura))
+        magnitude = eval(str(self.ui.const_1))
+        inicio = complex(eval(str(self.ui.ini_x)),
+                  eval(str(self.ui.ini_y)))
         
         mat = Gerador.doublet(n, altura, largura, magnitude, inicio)
-        return campo_doublet(n, altura, largura, inicio, magnitude, mat)
+        return CampoDoublet(n, altura, largura, inicio, magnitude, mat)
     
     def gera_fonte(self):
         '''
@@ -109,15 +109,15 @@ class Set_Creator_Ctrl:
             campo_fonte
                 Campo Fonte/Sumidouro Gerado
         '''
-        n = eval(str(self.ui.get_num_mat()))
-        altura = eval(str(self.ui.get_altura()))
-        largura = eval(str(self.ui.get_largura()))
-        magnitude = eval(str(self.ui.get_const_1()))
-        inicio = complex(eval(str(self.ui.get_ini_x())),
-                  eval(str(self.ui.get_ini_y())))
+        n = eval(str(self.ui.num_mat))
+        altura = eval(str(self.ui.altura))
+        largura = eval(str(self.ui.largura))
+        magnitude = eval(str(self.ui.const_1))
+        inicio = complex(eval(str(self.ui.ini_x)),
+                  eval(str(self.ui.ini_y)))
         
         mat = Gerador.sumidouro(n, altura, largura, magnitude, inicio)
-        return campo_fonte(n, altura, largura, inicio, magnitude, mat)
+        return CampoFonte(n, altura, largura, inicio, magnitude, mat)
         
     def gera_turbilhao(self):
         '''
@@ -127,16 +127,16 @@ class Set_Creator_Ctrl:
                 Campo Turbilhão Gerado
         '''
         
-        n = eval(str(self.ui.get_num_mat()))
-        altura = eval(str(self.ui.get_altura()))
-        largura = eval(str(self.ui.get_largura()))
-        magnitude = eval(str(self.ui.get_const_1()))
-        posicao = eval(str(self.ui.get_const_2()))
-        inicio = complex(eval(str(self.ui.get_ini_x())),
-                  eval(str(self.ui.get_ini_y())))
+        n = eval(str(self.ui.num_mat))
+        altura = eval(str(self.ui.altura))
+        largura = eval(str(self.ui.largura))
+        magnitude = eval(str(self.ui.const_1))
+        posicao = eval(str(self.ui.const_2))
+        inicio = complex(eval(str(self.ui.ini_x)),
+                  eval(str(self.ui.ini_y)))
         
         mat = Gerador.turbilhao(n, altura, largura, magnitude, posicao, inicio)
-        return campo_turbilhao(n, altura, largura, inicio, magnitude, posicao, mat)
+        return CampoTurbilhao(n, altura, largura, inicio, magnitude, posicao, mat)
          
     def close_window(self):
         '''

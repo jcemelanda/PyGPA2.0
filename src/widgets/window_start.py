@@ -9,7 +9,7 @@
 
 from PyQt6 import QtCore, QtGui, QtWidgets
 
-class Start_Window:
+class StartWindow:
     def setup(self, MainWindow):
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
@@ -46,7 +46,7 @@ class Start_Window:
 if __name__ == "__main__":
     import sys
     app = QtWidgets.QApplication(sys.argv)
-    ui = Start_Window()
+    ui = StartWindow()
     # exemplo de uso: criar QMainWindow e aplicar setup
     mw = QtWidgets.QMainWindow()
     ui.setup(mw)

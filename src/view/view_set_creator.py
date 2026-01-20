@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 from PyQt6 import QtCore, QtWidgets
-from widgets.window_set_creator import Set_Creator_Window
+from widgets.window_set_creator import SetCreatorWindow
 
  
-class Set_Creator_View(QtWidgets.QMainWindow):
+class SetCreatorView(QtWidgets.QMainWindow):
     def __init__(self, controle):
         self.funcoes = {
                         0:self.set_aleatorio,
@@ -14,37 +14,37 @@ class Set_Creator_View(QtWidgets.QMainWindow):
         
         super().__init__()
         self.controle = controle
-        self.ui = Set_Creator_Window()
+        self.ui = SetCreatorWindow()
         self.ui.setup(self)
         
         self.ui.comboBox.currentIndexChanged.connect(self.selecionado)
         self.ui.bt_gerar.clicked.connect(self.gerar_matrizes)
-        self.indice_selecionado = 0
+        self._indice_selecionado = 0
         
     def selecionado(self, i):
-        self.indice_selecionado = i
+        self._indice_selecionado = i
         self.zerar_campos()
         self.funcoes[i]()
         
     def inicia_campos(self, campo):
-        self.ui.comboBox.setCurrentIndex(campo.get_type())
-        self.ui.num_mat.setText(str(campo.get_num_mat()))
-        self.ui.altura.setText(str(campo.get_altura()))
-        self.ui.largura.setText(str(campo.get_largura()))
+        self.ui.comboBox.setCurrentIndex(campo.type)
+        self.ui.num_mat.setText(str(campo.num_mat))
+        self.ui.altura.setText(str(campo.altura))
+        self.ui.largura.setText(str(campo.largura))
         try:
-            self.ui.const_1.setText(str(campo.get_const_1()))
+            self.ui.const_1.setText(str(campo.const_1))
         except Exception as e:
             print(e)
         try:
-            self.ui.const_2.setText(str(campo.get_const_2()))
+            self.ui.const_2.setText(str(campo.const_2))
         except Exception as e:
             print(e)
         try:
-            self.ui.ini_x.setText(str(campo.get_inicio().real))
+            self.ui.ini_x.setText(str(campo.inicio.real))
         except Exception as e:
             print(e)
         try:
-            self.ui.ini_y.setText(str(campo.get_inicio().imag))
+            self.ui.ini_y.setText(str(campo.inicio.imag))
         except Exception as e:
             print(e)
         
@@ -125,26 +125,34 @@ class Set_Creator_View(QtWidgets.QMainWindow):
         self.ui.const_1.setText('')
         self.ui.const_2.setText('')
 
-    def get_indice_selecionado(self):
-        return self.indice_selecionado
+    @property
+    def indice_selecionado(self):
+        return self._indice_selecionado
     
-    def get_largura(self):
+    @property
+    def largura(self):
         return self.ui.largura.text()
     
-    def get_altura(self):
+    @property
+    def altura(self):
         return self.ui.altura.text()
     
-    def get_const_1(self):
+    @property
+    def const_1(self):
         return self.ui.const_1.text()
     
-    def get_const_2(self):
+    @property
+    def const_2(self):
         return self.ui.const_2.text()
     
-    def get_ini_x(self):
+    @property
+    def ini_x(self):
         return self.ui.ini_x.text()
 
-    def get_ini_y(self):
+    @property
+    def ini_y(self):
         return self.ui.ini_y.text()
     
-    def get_num_mat(self):
+    @property
+    def num_mat(self):
         return self.ui.num_mat.text()

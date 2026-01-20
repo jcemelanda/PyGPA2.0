@@ -1,11 +1,11 @@
 from PyQt6 import QtWidgets, QtGui
-from widgets.window_analisys import Analysis_Window
+from widgets.window_analisys import AnalysisWindow
 
-class Analise_View(QtWidgets.QMainWindow):
+class AnaliseView(QtWidgets.QMainWindow):
     def __init__(self, controle):
         super().__init__()
         self.controle = controle
-        self.ui = Analysis_Window()
+        self.ui = AnalysisWindow()
         self.ui.setup(self)
         self.count = 3
         self.shortcut_right = QtGui.QShortcut(QtGui.QKeySequence("l"), self)
@@ -25,7 +25,7 @@ class Analise_View(QtWidgets.QMainWindow):
 if __name__ == '__main__':
     import sys
     app = QtWidgets.QApplication(sys.argv)
-    av = Analise_View()
+    av = AnaliseView()
     av.add_widgets()
     av.showMaximized()
     sys.exit(app.exec())

@@ -10,7 +10,7 @@
 
 from PyQt6 import QtCore, QtGui, QtWidgets
 
-class Analysis_Window:
+class AnalysisWindow:
     def setup(self, main_window):
         self.centralwidget = QtWidgets.QWidget(main_window)
         self.centralwidget.setObjectName("centralwidget")
@@ -112,7 +112,7 @@ class Analysis_Window:
 if __name__ == "__main__":
     import sys
     app = QtWidgets.QApplication(sys.argv)
-    ui = Analysis_Window()
+    ui = AnalysisWindow()
     mw = QtWidgets.QMainWindow()
     ui.setup(mw)
     mw.show()

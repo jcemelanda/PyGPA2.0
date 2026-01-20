@@ -14,9 +14,9 @@ from matplotlib.backends.backend_qtagg import FigureCanvasQTAgg \
 from matplotlib.figure import Figure
 
 # Componentes internos
-from view.view_analisys import Analise_View
-from widgets.widget_detail import Detail_widget
-from widgets.widget_graphs import Grafics_widget
+from view.view_analisys import AnaliseView
+from widgets.widget_detail import DetailWidget
+from widgets.widget_graphs import GraphicsWidget
 
 # PIL
 from PIL import Image
@@ -25,7 +25,7 @@ from PIL import Image
 import time
 
 
-class Analise_Ctrl:
+class AnaliseCtrl:
     '''
     Controla o funcionamento do módulo de análise de gradientes
     '''
@@ -36,7 +36,7 @@ class Analise_Ctrl:
             mat -> list
                 Opcional - lista de campos de gradientes que serão análisados
         '''
-        self.ui = Analise_View(self)
+        self.ui = AnaliseView(self)
         self.ui.showMaximized()
         self.matrizes = mat
         self.figuras_vet = []
@@ -55,7 +55,7 @@ class Analise_Ctrl:
         
     def incrementa_view(self):
         '''
-        Muda o conjunto de dados sendo exibido para o próximo da ‭lista
+        Muda o conjunto de dados sendo exibido para o próximo da lista
         '''
         
         self.pos += 1
@@ -80,7 +80,7 @@ class Analise_Ctrl:
         
     def decrementa_view(self):
         '''
-        Muda o conjunto de dados sendo exibido para o anterior da ‭lista
+        Muda o conjunto de dados sendo exibido para o anterior da lista
         '''
         
         self.pos -= 1
@@ -94,7 +94,7 @@ class Analise_Ctrl:
                 
     def last_view(self):
         '''
-        Muda a exibição para o último conjunto da ‭lista
+        Muda a exibição para o último conjunto da lista
         '''
 
         self.pos = self.ui.ui.stackedGraphics.count() - 1
@@ -108,7 +108,7 @@ class Analise_Ctrl:
     
     def first_view(self):
         '''
-        Muda a exibição para o prieiro conjunto da ‭lista
+        Muda a exibição para o prieiro conjunto da lista
         '''
 
         self.pos = 0
@@ -122,11 +122,11 @@ class Analise_Ctrl:
                 
     def set_view(self, pos):
         '''
-        Ajusta a posição da ‭lista de dados para a posição passada como
+        Ajusta a posição da lista de dados para a posição passada como
         parâmetro
         params:
             pos -> int
-                Posição da ‭lista que será exibida
+                Posição da lista que será exibida
         '''
         
         self.pos = pos
@@ -245,7 +245,7 @@ class Analise_Ctrl:
             axes.plot(range(len(self.GAs)), self.GAs)
             axes.plot(i, self.GAs[i], 'ro')
             
-    def get_dx(self):
+    def _calculate_dx(self):
         '''
         Gera uma matriz com as derivadas parciais em x para a matriz de
         dados lida
@@ -287,7 +287,7 @@ class Analise_Ctrl:
                 mat.append(list(next(zip(*l))))
             return mat
                 
-    def get_dy(self):
+    def _calculate_dy(self):
         '''
         Gera uma matriz com as derivadas parciais em y para a matriz de
         dados lida
@@ -355,8 +355,8 @@ class Analise_Ctrl:
         Gera o campo de gradientes do conjunto de dados a partir das derivadas 
         parciais em x e y de cada elemento do conjunto
         '''
-        self.dx = self.get_dx()
-        self.dy = self.get_dy()
+        self.dx = self._calculate_dx()
+        self.dy = self._calculate_dy()
 
         self.normaliza_derivadas()
         self.anular()
@@ -465,7 +465,7 @@ class Analise_Ctrl:
         '''
 
         for indice in range(len(self.matrizes)):
-            graph_widget = Grafics_widget()
+            graph_widget = GraphicsWidget()
             graph_widget.setup()
             
             graph_widget.label.setText("%1.6f" % self.GAs[indice])
@@ -483,7 +483,7 @@ class Analise_Ctrl:
             graph_widget.gridLayout_3.addWidget(widget_vector, 0, 0, 1, 1)
             graph_widget.gridLayout_4.addWidget(widget_delaunay, 0, 0, 1, 1)
             
-            vect_widget = Detail_widget()
+            vect_widget = DetailWidget()
             vect_widget.setup()
             
             # Use detail figures for the detailed vector tab
@@ -495,7 +495,7 @@ class Analise_Ctrl:
             navbar_vetor = Navbar(widget_vector_tab, self.ui.ui.centralwidget)
             vect_widget.gridLayout_2.addWidget(navbar_vetor, 0, 0, 1, 1)
             
-            trian_widget = Detail_widget()
+            trian_widget = DetailWidget()
             trian_widget.setup()
             
             # Use detail figures for the detailed triangulation tab
@@ -522,4 +522,4 @@ class Analise_Ctrl:
             
 #Se for executado standalone
 if __name__ == '__main__':
-    Analise_Ctrl()
+    AnaliseCtrl()

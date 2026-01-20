@@ -8,14 +8,14 @@ Módulo de controle do módulo de geração dos campos
 from PyQt6 import QtCore, QtWidgets
 
 # Componentes internos
-from control.control_set_creator import Set_Creator_Ctrl
-from control.control_analisys import Analise_Ctrl
-from models.campos import campo_combinado
+from control.control_set_creator import SetCreatorCtrl
+from control.control_analisys import AnaliseCtrl
+from models.campos import CampoCombinado
 from utils.Constants import nomes_dos_campos
-from view.view_generator import Generator_View
+from view.view_generator import GeneratorView
 
 
-class Generator_Ctrl:
+class GeneratorCtrl:
     '''
     Controla o módulo do gerador de campos de gradientes
     '''
@@ -24,7 +24,7 @@ class Generator_Ctrl:
         Instancia atributos da classe e cria a interface gráfica
         '''
         self.pilha = []
-        self.ui = Generator_View(self)
+        self.ui = GeneratorView(self)
         self.ui.showMaximized()
         self.status = "" 
 
@@ -32,15 +32,15 @@ class Generator_Ctrl:
         '''
         Chama ainterface de criação de um novo campo de gradientes
         '''
-        self.ctrl_set_creator = Set_Creator_Ctrl(self)
+        self.ctrl_set_creator = SetCreatorCtrl(self)
         self.status = 'novo'
         
     def recebe_campo(self, campo):
         '''
         Recebe o campo gerado e acrescenta à lista de campos
             params:
-                campo -> campo_aleatorio, campo_combinado, campo_constante,
-                    campo_doublet, campo_fonte, campo_turbilhao
+                campo -> CampoAleatorio, CampoCombinado, CampoConstante,
+                    CampoDoublet, CampoFonte, CampoTurbilhao
                     um campo de gradientes
         '''
         if self.status == 'novo':
@@ -55,7 +55,7 @@ class Generator_Ctrl:
         Chama a interface que atualiza os dados do campos de gradientes
         '''
         if len(self.pilha) > 0:
-            i = self.ui.getListWidget().currentRow()
+            i = self.ui.list_widget.currentRow()
             if i < 0:
                 message = QtWidgets.QMessageBox(self.ui)
                 message.setText('Selecione um elemento da lista para editar')
@@ -63,7 +63,7 @@ class Generator_Ctrl:
                 pass
             else:
                 campo = self.pilha[self.ui.getListWidget().currentRow()]
-                self.ctrl_set_creator = Set_Creator_Ctrl(self, campo)
+                self.ctrl_set_creator = SetCreatorCtrl(self, campo)
                 self.status = 'edita'
         else:
             message = QtWidgets.QMessageBox(self.ui)
@@ -75,25 +75,25 @@ class Generator_Ctrl:
         '''
         Atualiza os dados de um campo de gradientes selecionado
             params:
-                campo -> campo_aleatorio, campo_combinado, campo_constante,
-                    campo_doublet, campo_fonte, campo_turbilhao
+                campo -> CampoAleatorio, CampoCombinado, CampoConstante,
+                    CampoDoublet, CampoFonte, CampoTurbilhao
                     um campo de gradientes
         '''
-        i = self.ui.getListWidget().currentRow()
+        i = self.ui.list_widget.currentRow()
         self.pilha[i] = campo
-        self.ui.getListWidget().takeItem(i)
-        self.ui.getListWidget().insertItem(i, QtWidgets.QListWidgetItem(nomes_dos_campos[campo.get_type()]))
+        self.ui.list_widget.takeItem(i)
+        self.ui.list_widget.insertItem(i, QtWidgets.QListWidgetItem(nomes_dos_campos[campo.type]))
         
     def add_novo_campo(self, campo):
         '''
         Adiciona uma nova entrada de campo de gradientes à lista
             params:
-                campo -> campo_aleatorio, campo_combinado, campo_constante,
-                    campo_doublet, campo_fonte, campo_turbilhao
+                campo -> CampoAleatorio, CampoCombinado, CampoConstante,
+                    CampoDoublet, CampoFonte, CampoTurbilhao
                     um campo de gradientes
         '''
         self.pilha.insert(0, campo)
-        self.ui.getListWidget().insertItem(0, QtWidgets.QListWidgetItem(nomes_dos_campos[campo.get_type()]))
+        self.ui.list_widget.insertItem(0, QtWidgets.QListWidgetItem(nomes_dos_campos[campo.type]))
         
     def combina_campos(self):
         '''
@@ -102,7 +102,7 @@ class Generator_Ctrl:
         '''
         mat = []
         for campo in self.pilha:
-            mat.append(campo.get_mat())
+            mat.append(campo.mat)
         m1 = list(zip(*mat))
         m2 = [list(zip(*m1[i])) for i in range(len(m1))]
         super_mat = []
@@ -116,13 +116,13 @@ class Generator_Ctrl:
                 m.append(l)
             super_mat.append(m)
             
-        combinado = campo_combinado(len(super_mat), 
+        combinado = CampoCombinado(len(super_mat), 
                                     len(super_mat[0]), 
                                     len(super_mat[0][0]), 
                                     super_mat[:], 
                                     self.pilha[:])
         self.pilha = []
-        self.ui.getListWidget().clear()
+        self.ui.list_widget.clear()
         self.add_novo_campo(combinado)
         
         
@@ -130,28 +130,28 @@ class Generator_Ctrl:
         '''
         Remove uma entrada da lista de Campos de Gradientes
         '''
-        i = self.ui.getListWidget().currentRow()
+        i = self.ui.list_widget.currentRow()
         if self.pilha:
             self.pilha.pop(i)
         else:
             message = QtWidgets.QMessageBox(self.ui)
             message.setText('A lista de campos está vazia')
             message.show()
-        self.ui.getListWidget().takeItem(i)
+        self.ui.list_widget.takeItem(i)
         
     def limpa_lista(self):
         '''
         Limpa a lista de campos de gradientes
         '''
         self.pilha = []
-        self.ui.getListWidget().clear()
+        self.ui.list_widget.clear()
         
     def analisar(self):
         '''
         Chama a interface de análise dos campos de gradientes para a entrada
         selecionada
         '''
-        super_mat = (self.pilha[self.ui.getListWidget().currentRow()]).get_mat()
-        c = Analise_Ctrl(super_mat)
+        super_mat = (self.pilha[self.ui.list_widget.currentRow()]).mat
+        c = AnaliseCtrl(super_mat)
         c.processa_matrizes()
  
