@@ -8,4 +8,4 @@ src/deploy/dist
 src/deploy/build/*
 src/deploy/dist/*
 src/setup.py
-
+__pycache__/
