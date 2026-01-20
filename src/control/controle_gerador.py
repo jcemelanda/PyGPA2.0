@@ -8,11 +8,11 @@ Módulo de controle do módulo de geração dos campos
 from PyQt6 import QtCore, QtWidgets
 
 # Componentes internos
-from control.control_set_creator import SetCreatorCtrl
-from control.control_analisys import AnaliseCtrl
+from control.controle_criador_conjunto import SetCreatorCtrl
+from control.controle_analise import AnaliseCtrl
 from models.campos import CampoCombinado
-from utils.Constants import nomes_dos_campos
-from view.view_generator import GeneratorView
+from utils.constantes import nomes_dos_campos
+from view.visao_gerador import GeneratorView
 
 
 class GeneratorCtrl:
@@ -62,7 +62,7 @@ class GeneratorCtrl:
                 message.show()
                 pass
             else:
-                campo = self.pilha[self.ui.getListWidget().currentRow()]
+                campo = self.pilha[self.ui.list_widget.currentRow()]
                 self.ctrl_set_creator = SetCreatorCtrl(self, campo)
                 self.status = 'edita'
         else:
@@ -100,26 +100,44 @@ class GeneratorCtrl:
         Combina todos os campos da lista em um único através de operações
         matemáticas
         '''
-        mat = []
-        for campo in self.pilha:
-            mat.append(campo.mat)
-        m1 = list(zip(*mat))
-        m2 = [list(zip(*m1[i])) for i in range(len(m1))]
-        super_mat = []
-        for matriz in m2:
-            m = []
-            for linha in matriz:
-                novaLinha = list(zip(*linha))
-                l = []
-                for elemento in novaLinha:
-                    l.append(tuple(map(sum, zip(*elemento))))
-                m.append(l)
-            super_mat.append(m)
+        import numpy as np
+        # Extrai matrizes. Elas já são arrays numpy graças a atualização do Gerador
+        # Lista de arrays [mat1, mat2, ...] 
+        # Cada mat é (n, h, w)
+        matrizes = [campo.mat for campo in self.pilha]
+        
+        # Verifica se tem o mesmo formato? Assumindo que sim pela lógica da UI.
+        # Mas e se n for diferente?
+        # Vamos confiar nas restrições da UI ou broadcast. 
+        # Na verdade campos só podem ser combinados se os formatos coincidirem.
+        # Assumindo lógica simples de adição:
+        
+        if not matrizes:
+             return
+
+        # Soma Vetorizada
+        # Se todas as mat são (n, h, w), sum(axis=0) cria (n, h, w) campo mas superposto?
+        # Não, queremos somar os campos elemento a elemento.
+        # super_matriz = sum(mat1, mat2, ...)
+        
+        # Empilhando: shape (k, n, h, w)
+        # Soma ao longo do eixo 0 -> (n, h, w)
+        try:
+             super_matriz = np.sum(matrizes, axis=0)
+        except ValueError as e:
+             # Lida com incompatibilidade de formato potencialmente
+             message = QtWidgets.QMessageBox(self.ui)
+             message.setText(f'Erro ao combinar campos: {e}')
+             message.show()
+             return
             
-        combinado = CampoCombinado(len(super_mat), 
-                                    len(super_mat[0]), 
-                                    len(super_mat[0][0]), 
-                                    super_mat[:], 
+        # formato super_matriz é (n, h, w) para complex128
+        n, h, w = super_matriz.shape
+        
+        combinado = CampoCombinado(n, 
+                                    h, 
+                                    w, 
+                                    super_matriz, 
                                     self.pilha[:])
         self.pilha = []
         self.ui.list_widget.clear()

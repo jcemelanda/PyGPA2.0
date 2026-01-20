@@ -10,8 +10,8 @@ from PyQt6 import QtCore
 #Componentes internos
 from models.campos import CampoAleatorio, CampoConstante, CampoDoublet, \
     CampoFonte, CampoTurbilhao
-from utils.Gerador import Gerador
-from view.view_set_creator import SetCreatorView
+from utils.gerador import Gerador
+from view.visao_criador_conjunto import SetCreatorView
 
 
 class SetCreatorCtrl:
@@ -96,10 +96,11 @@ class SetCreatorCtrl:
         altura = eval(str(self.ui.altura))
         largura = eval(str(self.ui.largura))
         magnitude = eval(str(self.ui.const_1))
+        vel = eval(str(self.ui.const_2))
         inicio = complex(eval(str(self.ui.ini_x)),
                   eval(str(self.ui.ini_y)))
         
-        mat = Gerador.doublet(n, altura, largura, magnitude, inicio)
+        mat = Gerador.doublet(n, altura, largura, magnitude, inicio, vel.real, vel.imag)
         return CampoDoublet(n, altura, largura, inicio, magnitude, mat)
     
     def gera_fonte(self):
@@ -113,10 +114,11 @@ class SetCreatorCtrl:
         altura = eval(str(self.ui.altura))
         largura = eval(str(self.ui.largura))
         magnitude = eval(str(self.ui.const_1))
+        vel = eval(str(self.ui.const_2))
         inicio = complex(eval(str(self.ui.ini_x)),
                   eval(str(self.ui.ini_y)))
         
-        mat = Gerador.sumidouro(n, altura, largura, magnitude, inicio)
+        mat = Gerador.sumidouro(n, altura, largura, magnitude, inicio, vel.real, vel.imag)
         return CampoFonte(n, altura, largura, inicio, magnitude, mat)
         
     def gera_turbilhao(self):
@@ -131,11 +133,12 @@ class SetCreatorCtrl:
         altura = eval(str(self.ui.altura))
         largura = eval(str(self.ui.largura))
         magnitude = eval(str(self.ui.const_1))
-        posicao = eval(str(self.ui.const_2))
+        vel = eval(str(self.ui.const_2))
+        posicao = 0 # Unused in new logical vortex
         inicio = complex(eval(str(self.ui.ini_x)),
                   eval(str(self.ui.ini_y)))
         
-        mat = Gerador.turbilhao(n, altura, largura, magnitude, posicao, inicio)
+        mat = Gerador.turbilhao(n, altura, largura, magnitude, posicao, inicio, vel.real, vel.imag)
         return CampoTurbilhao(n, altura, largura, inicio, magnitude, posicao, mat)
          
     def close_window(self):

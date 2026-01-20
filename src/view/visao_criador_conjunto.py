@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from PyQt6 import QtCore, QtWidgets
-from widgets.window_set_creator import SetCreatorWindow
+from widgets.janela_criador_conjunto import SetCreatorWindow
 
  
 class SetCreatorView(QtWidgets.QMainWindow):
@@ -75,29 +75,31 @@ class SetCreatorView(QtWidgets.QMainWindow):
     
     def set_fonte(self):
         self.ui.lb_const_1.setVisible(True)
-        self.ui.lb_const_2.setVisible(False)
+        self.ui.lb_const_2.setVisible(True)
         self.ui.lb_x_ini.setVisible(True)
         self.ui.lb_y_ini.setVisible(True)
         
         self.ui.const_1.setVisible(True)
-        self.ui.const_2.setVisible(False)
+        self.ui.const_2.setVisible(True)
         self.ui.ini_x.setVisible(True)
         self.ui.ini_y.setVisible(True)
         
         self.ui.lb_const_1.setText('Magnitude')
+        self.ui.lb_const_2.setText('Velocidade (a+bj)')
         
     def set_doublet(self):
         self.ui.lb_const_1.setVisible(True)
-        self.ui.lb_const_2.setVisible(False)
+        self.ui.lb_const_2.setVisible(True)
         self.ui.lb_x_ini.setVisible(True)
         self.ui.lb_y_ini.setVisible(True)
         
         self.ui.const_1.setVisible(True)
-        self.ui.const_2.setVisible(False)
+        self.ui.const_2.setVisible(True)
         self.ui.ini_x.setVisible(True)
         self.ui.ini_y.setVisible(True)
         
         self.ui.lb_const_1.setText('Magnitude (complexo a+bj)')
+        self.ui.lb_const_2.setText('Velocidade (a+bj)')
         
     def set_turbilhao(self):
         self.ui.lb_const_1.setVisible(True)
@@ -110,8 +112,8 @@ class SetCreatorView(QtWidgets.QMainWindow):
         self.ui.ini_x.setVisible(True)
         self.ui.ini_y.setVisible(True)
         
-        self.ui.lb_const_1.setText('Magnitude')
-        self.ui.lb_const_2.setText('Posição (complexo a+bj)')
+        self.ui.lb_const_1.setText('Circulação')
+        self.ui.lb_const_2.setText('Velocidade (a+bj)')
         
     def gerar_matrizes(self):
         self.controle.gerar_matrizes()

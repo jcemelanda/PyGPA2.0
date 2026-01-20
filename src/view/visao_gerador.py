@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from PyQt6 import QtWidgets
-from widgets.window_generator import GeneratorWindow
+from widgets.janela_gerador import GeneratorWindow
 
 class GeneratorView(QtWidgets.QMainWindow):
     def __init__(self, controle):

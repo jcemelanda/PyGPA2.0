@@ -1,5 +1,5 @@
 from PyQt6 import QtWidgets, QtGui
-from widgets.window_analisys import AnalysisWindow
+from widgets.janela_analise import AnalysisWindow
 
 class AnaliseView(QtWidgets.QMainWindow):
     def __init__(self, controle):

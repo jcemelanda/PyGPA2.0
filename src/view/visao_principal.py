@@ -1,5 +1,5 @@
 from PyQt6 import QtGui, QtCore, QtWidgets
-from widgets.window_start import StartWindow
+from widgets.janela_inicio import StartWindow
 
 class MainView(QtWidgets.QMainWindow):
     def __init__(self, controle):

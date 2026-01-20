@@ -14,9 +14,9 @@ from matplotlib.backends.backend_qtagg import FigureCanvasQTAgg \
 from matplotlib.figure import Figure
 
 # Componentes internos
-from view.view_analisys import AnaliseView
-from widgets.widget_detail import DetailWidget
-from widgets.widget_graphs import GraphicsWidget
+from view.visao_analise import AnaliseView
+from widgets.widget_detalhe import DetailWidget
+from widgets.widget_graficos import GraphicsWidget
 
 # PIL
 from PIL import Image
@@ -241,223 +241,147 @@ class AnaliseCtrl:
         
         for i in range(len(self.matrizes)):
             self.figuras_GA.append(Figure(dpi=120))
-            axes = self.figuras_GA[-1].add_subplot(111)
-            axes.plot(range(len(self.GAs)), self.GAs)
-            axes.plot(i, self.GAs[i], 'ro')
+            eixos = self.figuras_GA[-1].add_subplot(111)
+            eixos.plot(range(len(self.GAs)), self.GAs)
+            eixos.plot(i, self.GAs[i], 'ro')
             
-    def _calculate_dx(self):
-        '''
-        Gera uma matriz com as derivadas parciais em x para a matriz de
-        dados lida
-        return:
-            mat -> list
-                lista que contém as matrizes de derivadas parciais em x
-        '''
-        
-        if self.ABERTURA == 'normal':
-            dx = []
-            dlg = QtWidgets.QProgressDialog(u'Calculando dx', u'Cancelar',
-                                        0, len(self.matriz[:-1]))
-            dlg.setModal(True)
-            dlg.setMinimumDuration(0)
-            dlg.setAutoClose(True)
-            dlg.setWindowTitle(u'Cálculo da derivada')
-            dlg.show()
-            a = 0
-
-            for linha in self.matriz[:]:
-                linha_dx = []
-                for i in range(len(linha)):
-                    if i == 0:
-                        linha_dx.append(
-                                (-3 * linha[0] + 4 * linha[1] - linha[2]) / 2.0)
-                    elif i == len(linha) - 1:
-                        linha_dx.append(
-                            (3 * linha[-1] - 4 * linha[-2] + linha[-3]) / 2.0)
-                    else:
-                        linha_dx.append((linha[i + 1] - linha[i - 1]) / 2.0)
-                dx.append(linha_dx)
-                dlg.setValue(a)
-                a += 1
-                dlg.close()
-            return dx
-        else:
-            mat = []
-            for l in self.matriz[:]:
-                mat.append(list(next(zip(*l))))
-            return mat
-                
-    def _calculate_dy(self):
-        '''
-        Gera uma matriz com as derivadas parciais em y para a matriz de
-        dados lida
-        return:
-            mat -> list
-                lista que contém as matrizes de derivadas parciais em x
-        '''
-        if self.ABERTURA == 'normal':
-            dy = []
-            dlg = QtWidgets.QProgressDialog(u'Calculando dy', u'Cancelar',
-                                        0, len(self.matriz[:-1]))
-            dlg.setModal(True)
-            dlg.setMinimumDuration(0)
-            dlg.setAutoClose(True)
-            dlg.setWindowTitle(u'Cálculo da derivada')
-            dlg.show()
-            a = 0
-            for linha in zip(*self.matriz[:]):
-                linha_dy = []
-                for i in range(len(linha)):
-                    if i == 0:
-                        linha_dy.append(
-                                        (-3 * linha[0] + 4 * linha[1] - linha[2]) / 2.0)
-                    elif i == len(linha) - 1:
-                        linha_dy.append(
-                                        (3 * linha[-1] - 4 * linha[-2] + linha[-3]) / 2.0)
-                    else:
-                        linha_dy.append((linha[i + 1] - linha[i - 1]) / 2.0)
-                dy.append(linha_dy)
-                dlg.setValue(a)
-                a += 1
-                if dlg.wasCanceled():
-                    return
-            dlg.close()
-            return list(zip(*dy))
-        else:
-            mat = []
-            for l in self.matriz[:]:
-                mat.append(list(list(zip(*l))[1]))
-            return mat
-        
-    def normaliza_derivadas(self):
-        '''
-        Normaliza as derivadas em função do maior valor que se tornará 1
-        Todos os valores passam a ter norma entre 0 e 1 inclusive
-        '''
-        if self.normalizado:
-            return
-
-        maximo = 0.0
-
-        for linha in self.dx:
-            m = max([abs(l) for l in linha])
-            if m > maximo:
-                maximo = m
-        for linha in self.dy:
-            m = max([abs(l) for l in linha])
-            if m > maximo:
-                maximo = m
-        self.dx = [[d / maximo for d in linha] for linha in self.dx]
-        self.dy = [[d / maximo for d in linha] for linha in self.dy]
       
     def gerar_vetores(self):
         '''
-        Gera o campo de gradientes do conjunto de dados a partir das derivadas 
-        parciais em x e y de cada elemento do conjunto
+        Gera o campo de gradientes do conjunto de dados a partir das componentes
+        NumPy arrays: self.matriz é array complexo (h, w)
         '''
-        self.dx = self._calculate_dx()
-        self.dy = self._calculate_dy()
-
-        self.normaliza_derivadas()
-        self.anular()
-
-        minx = -1
-        maxx = round(max(list(zip(*self.dx))[-1]))
-        miny = -1
-        maxy = round(max(self.dy[-1]))
-
-        # Create figure for overview tab
+        import numpy as np
+        
+        # Se aberto de arquivo (imagem), pode ser lista de listas.
+        # Verifica tipo
+        if isinstance(self.matriz, list):
+             self.matriz = np.array(self.matriz)
+        
+        # Se for array complexo do Gerador
+        if np.iscomplexobj(self.matriz):
+             # U = Real, V = Imag
+             # Sistema de coordenadas: indexação de matriz (linha, col)
+             # Quiver espera X, Y, U, V.
+             self.dx = self.matriz.real
+             self.dy = self.matriz.imag
+             # Extração direta das componentes real e imaginária
+        else:
+             # Campo escalar (Importação de imagem)
+             # Usa np.gradient
+             self.dy, self.dx = np.gradient(self.matriz)
+             # Nota: gradient retorna (gradiente eixo 0, gradiente eixo 1) -> (dy, dx)
+             
+        # Normalização
+        norm = np.hypot(self.dx, self.dy)
+        max_val = np.max(norm)
+        if max_val > 0:
+             self.dx /= max_val
+             self.dy /= max_val
+             
+        # Plotagem
+        min_x = -1
+        max_x = self.dx.shape[1] # largura
+        min_y = -1
+        max_y = self.dx.shape[0] # altura
+        
+        # Cria figura para aba de visão geral
         self.figuras_vet.append(Figure(dpi=120))
-        axes = self.figuras_vet[-1].add_subplot(111, aspect='equal')
-        q = axes.quiver(self.dx, self.dy, angles='xy', scale=1.0,
-                                scale_units='xy', minshaft=2, minlength=1)
-        axes.quiverkey(q, 0, miny - 2, 1, '', coordinates='data')
-        axes.set_xlim(minx, len(self.dx[0]) + maxx)
-        axes.set_ylim(miny, len(self.dx) + maxy)
+        eixos = self.figuras_vet[-1].add_subplot(111, aspect='equal')
+        # Quiver no mpl aceita arrays 2D diretamente
+        # Grade X, Y
+        X, Y = np.meshgrid(np.arange(max_x), np.arange(max_y))
         
-        # Create separate figure for detailed tab
+        q = eixos.quiver(X, Y, self.dx, self.dy, angles='xy', scale=1.0,
+                                scale_units='xy', minshaft=2, minlength=1)
+        eixos.quiverkey(q, 0, min_y - 2, 1, '', coordinates='data')
+        eixos.set_xlim(min_x, max_x)
+        eixos.set_ylim(min_y, max_y)
+        
+        # Cria figura separada para aba de detalhes
         self.figuras_vet_detail.append(Figure(dpi=120))
-        axes_detail = self.figuras_vet_detail[-1].add_subplot(111, aspect='equal')
-        q_detail = axes_detail.quiver(self.dx, self.dy, angles='xy', scale=1.0,
+        eixos_detalhe = self.figuras_vet_detail[-1].add_subplot(111, aspect='equal')
+        q_detalhe = eixos_detalhe.quiver(X, Y, self.dx, self.dy, angles='xy', scale=1.0,
                                 scale_units='xy', minshaft=2, minlength=1)
-        axes_detail.quiverkey(q_detail, 0, miny - 2, 1, '', coordinates='data')
-        axes_detail.set_xlim(minx, len(self.dx[0]) + maxx)
-        axes_detail.set_ylim(miny, len(self.dx) + maxy)
+        eixos_detalhe.quiverkey(q_detalhe, 0, min_y - 2, 1, '', coordinates='data')
+        eixos_detalhe.set_xlim(min_x, max_x) # largura
+        eixos_detalhe.set_ylim(min_y, max_y) # altura
         
-    def anular(self):
-        '''
-        Coloca norma zero para os pares de vetores que se anulam.
-        '''
-        vects = [list(zip(x, y)) for x, y in zip(self.dx, self.dy)]
 
-        dlg = QtWidgets.QProgressDialog(u'Otimizando campo', u'Cancelar',
-                                    0, len(vects))
-        dlg.setModal(True)
-        dlg.setMinimumDuration(0)
-        dlg.setAutoClose(True)
-        dlg.setWindowTitle(u'Eliminar vetores')
-        dlg.show()
-        for i in range(len(vects)):
-            for j in range(len(vects[0])):
-                for k in range(i, len(vects)):
-                    for w in range(len(vects[0])):
-                        a = vects[i][j]
-                        b = vects[k][w]
-                        if a == (0, 0):
-                            break
-                        if (a[0] == -b[0]) and (a[1] == -b[1]):
-                                vects[i][j] = vects[k][w] = (0, 0)
-                                break
-            dlg.setValue(i)
-            if dlg.wasCanceled():
-                return
-        dlg.close()
-        dlg.destroy
-        v = [list(zip(*l)) for l in vects]
-        self.dx, self.dy = zip(*v)
         
     def gerar_triangulacao(self):
         '''
         Gera a triangulação de Delaunay para o conjunto de dados,
         plota os triângulos e exibe o número de arestas encontradas
+        (Versão Vetorizada NumPy)
         '''
-        vects = [list(zip(x, y)) for x, y in zip(self.dx, self.dy)]
-        points = []
-        for i in range(len(vects)):
-            line = []
-            for j in range(len(vects[0])):
-                x, y = vects[i][j]
-                if (abs(x) > 0.0) or (abs(y) > 0.0):
-                    if [x + j, y + i] not in points:
-                        line.append([x + j, y + i])
-            points += line
-
-        x, y = zip(*points)
-        t = tri.Triangulation(x, y)
+        import numpy as np
         
-        # Create figure for overview tab
-        self.figuras_triang.append(Figure(dpi=120))
-        axes = self.figuras_triang[-1].add_subplot(111, aspect='equal')
-        minx = round(min(list(zip(*self.dx))[0])) - 1
-        maxx = round(max(list(zip(*self.dx))[-1]))
-        miny = round(min(self.dy[0])) - 1
-        maxy = round(max(self.dy[-1]))
-        if miny >= 0:
-            miny = -1
-        if minx >= 0:
-            minx = -1
-        axes.set_xlim(minx, len(self.dx[0]) + maxx)
-        axes.set_ylim(miny, len(self.dx) + maxy)
-        axes.triplot(t)
+        # Self.dx e self.dy são arrays (h, w) normalizados
+        h, w = self.dx.shape
         
-        # Create separate figure for detailed tab
-        self.figuras_triang_detail.append(Figure(dpi=120))
-        axes_detail = self.figuras_triang_detail[-1].add_subplot(111, aspect='equal')
-        axes_detail.set_xlim(minx, len(self.dx[0]) + maxx)
-        axes_detail.set_ylim(miny, len(self.dx) + maxy)
-        axes_detail.triplot(t)
+        # Cria coordenadas da grade
+        X, Y = np.meshgrid(np.arange(w), np.arange(h))
+        
+        # Vetorizado P_final
+        # Px = X + dx
+        # Py = Y + dy
+        Px = X + self.dx
+        Py = Y + self.dy
+        
+        # Linearizar para Delaunay
+        # Filtrar vetores pequenos (ruído)
+        
+        mascara = (np.abs(self.dx) > 1e-6) | (np.abs(self.dy) > 1e-6)
+        x_filtrado = Px[mascara]
+        y_filtrado = Py[mascara]
+        
+        if len(x_filtrado) < 3:
+             # Pontos insuficientes para triangulação
+             self.GAs.append(0)
+             # Cria figura vazia
+             self.figuras_triang.append(Figure(dpi=120))
+             self.figuras_triang_detail.append(Figure(dpi=120))
+             return
 
-        self.GAs.append((len(t.edges) - len(x)) / len(x))
+        # Triangulação Matplotlib
+        try:
+            t = tri.Triangulation(x_filtrado, y_filtrado)
+            
+            # Cria figura para aba de visão geral
+            self.figuras_triang.append(Figure(dpi=120))
+            eixos = self.figuras_triang[-1].add_subplot(111, aspect='equal')
+            
+            min_x = np.min(x_filtrado) - 1
+            max_x = np.max(x_filtrado) + 1
+            min_y = np.min(y_filtrado) - 1
+            max_y = np.max(y_filtrado) + 1
+            
+            eixos.set_xlim(min_x, max_x)
+            eixos.set_ylim(min_y, max_y)
+            eixos.triplot(t)
+            
+            # Cria figura separada para aba de detalhes
+            self.figuras_triang_detail.append(Figure(dpi=120))
+            eixos_detalhe = self.figuras_triang_detail[-1].add_subplot(111, aspect='equal')
+            eixos_detalhe.set_xlim(min_x, max_x)
+            eixos_detalhe.set_ylim(min_y, max_y)
+            eixos_detalhe.triplot(t)
+    
+            # Cálculo do GA (Grau de Assimetria)
+            # Original: (len(arestas) - len(pontos)) / len(pontos)
+            num_arestas = len(t.edges)
+            num_pontos = len(x_filtrado)
+            if num_pontos > 0:
+                self.GAs.append((num_arestas - num_pontos) / num_pontos)
+            else:
+                 self.GAs.append(0)
+                 
+        except Exception as e:
+            print(f"Falha na triangulação: {e}")
+            self.GAs.append(0)
+            self.figuras_triang.append(Figure(dpi=120))
+            self.figuras_triang_detail.append(Figure(dpi=120))
         
     def gerar_widgets(self):
         '''
@@ -470,7 +394,7 @@ class AnaliseCtrl:
             
             graph_widget.label.setText("%1.6f" % self.GAs[indice])
             
-            # Use overview figures for the first tab
+            # Usa figuras de visão geral para a primeira aba
             widget_vector = FigureWidget(self.figuras_vet[indice])
             widget_vector.setObjectName("widget_vector")
             widget_vector.setParent(graph_widget.groupBox)
@@ -486,7 +410,7 @@ class AnaliseCtrl:
             vect_widget = DetailWidget()
             vect_widget.setup()
             
-            # Use detail figures for the detailed vector tab
+            # Usa figuras de detalhe para a aba de vetores detalhada
             widget_vector_tab = FigureWidget(self.figuras_vet_detail[indice])
             widget_vector_tab.setObjectName("widget_vector_tab")
             widget_vector_tab.setParent(vect_widget.groupBox)
@@ -498,7 +422,7 @@ class AnaliseCtrl:
             trian_widget = DetailWidget()
             trian_widget.setup()
             
-            # Use detail figures for the detailed triangulation tab
+            # Usa figuras de detalhe para a aba de triangulação detalhada
             widget_delaunay_tab = FigureWidget(self.figuras_triang_detail[indice])
             widget_delaunay_tab.setObjectName("widget_delaunay_tab")
             widget_delaunay_tab.setParent(trian_widget.groupBox)

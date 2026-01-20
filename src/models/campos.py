@@ -319,7 +319,8 @@ class CampoTurbilhao:
         self.inicio = p
         self.magnitude = m
         self.posicao = ic
-        self.mat = mat if mat is not None else []
+        import numpy as np
+        self.mat = mat if mat is not None else np.array([])
     
     def __str__(self):
         '''
@@ -363,8 +364,14 @@ class CampoTurbilhao:
 
 def str_mat(mat):
     '''
-    Cria uma versão textual de uma matriz bidimensional
+    Cria uma versão textual de uma matriz bidimensional (NumPy)
     '''
+    # NumPy arrays have a nice built-in string representation
+    import numpy as np
+    if isinstance(mat, np.ndarray):
+        return str(mat)
+    
+    # Fallback for old lists (shouldn't happen, but safe to keep)
     t = '[\n'
     for i in range(len(mat)):
         t += '[ '

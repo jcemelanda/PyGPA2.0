@@ -11,9 +11,9 @@ from PyQt6 import QtWidgets, QtCore
 import sys
 
 #Componentes Locais
-from view.view_main import MainView
-from control.control_analisys import AnaliseCtrl
-from control.control_generator import GeneratorCtrl
+from view.visao_principal import MainView
+from control.controle_analise import AnaliseCtrl
+from control.controle_gerador import GeneratorCtrl
 
 class MainCtrl:
     '''
