@@ -103,13 +103,13 @@ class Generator_Ctrl:
         mat = []
         for campo in self.pilha:
             mat.append(campo.get_mat())
-        m1 = zip(*mat)
-        m2 = [zip(*m1[i]) for i in range(len(m1))]
+        m1 = list(zip(*mat))
+        m2 = [list(zip(*m1[i])) for i in range(len(m1))]
         super_mat = []
         for matriz in m2:
             m = []
             for linha in matriz:
-                novaLinha = zip(*linha)
+                novaLinha = list(zip(*linha))
                 l = []
                 for elemento in novaLinha:
                     l.append(tuple(map(sum, zip(*elemento))))

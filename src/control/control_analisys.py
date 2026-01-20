@@ -40,8 +40,10 @@ class Analise_Ctrl:
         self.ui.showMaximized()
         self.matrizes = mat
         self.figuras_vet = []
+        self.figuras_vet_detail = []  # Separate figures for detailed tab
         self.GAs = []
         self.figuras_triang = []
+        self.figuras_triang_detail = []  # Separate figures for detailed tab
         self.figuras_GA = []
         self.pos = 0
         self.current_tab = 0
@@ -57,16 +59,13 @@ class Analise_Ctrl:
         '''
         
         self.pos += 1
-        if self.current_tab == 0:
-            self.ui.ui.stackedGraphics.setCurrentIndex(self.pos)
-        elif self.current_tab == 1:
-            self.ui.ui.stackedVet.setCurrentIndex(self.pos)
-        elif self.current_tab == 2:
-            self.ui.ui.stackedTriang.setCurrentIndex(self.pos)
-        else:
-            self.ui.ui.stackedGPA.setCurrentIndex(self.pos)
+        self.ui.ui.stackedGraphics.setCurrentIndex(self.pos)
+        self.ui.ui.stackedVet.setCurrentIndex(self.pos)
+        self.ui.ui.stackedTriang.setCurrentIndex(self.pos)
+        self.ui.ui.stackedGPA.setCurrentIndex(self.pos)
+        self.ui.ui.horizontalSlider.blockSignals(True)
         self.ui.ui.horizontalSlider.setValue(self.pos)
-        time.sleep(.10)
+        self.ui.ui.horizontalSlider.blockSignals(False)
     
     def set_current_tab(self, tab):
         '''
@@ -85,16 +84,13 @@ class Analise_Ctrl:
         '''
         
         self.pos -= 1
-        if self.current_tab == 0:
-            self.ui.ui.stackedGraphics.setCurrentIndex(self.pos)
-        elif self.current_tab == 1:
-            self.ui.ui.stackedVet.setCurrentIndex(self.pos)
-        elif self.current_tab == 2:
-            self.ui.ui.stackedTriang.setCurrentIndex(self.pos)
-        else:
-            self.ui.ui.stackedGPA.setCurrentIndex(self.pos)
+        self.ui.ui.stackedGraphics.setCurrentIndex(self.pos)
+        self.ui.ui.stackedVet.setCurrentIndex(self.pos)
+        self.ui.ui.stackedTriang.setCurrentIndex(self.pos)
+        self.ui.ui.stackedGPA.setCurrentIndex(self.pos)
+        self.ui.ui.horizontalSlider.blockSignals(True)
         self.ui.ui.horizontalSlider.setValue(self.pos)
-        time.sleep(.10)
+        self.ui.ui.horizontalSlider.blockSignals(False)
                 
     def last_view(self):
         '''
@@ -106,7 +102,9 @@ class Analise_Ctrl:
         self.ui.ui.stackedVet.setCurrentIndex(self.pos)
         self.ui.ui.stackedTriang.setCurrentIndex(self.pos)
         self.ui.ui.stackedGPA.setCurrentIndex(self.pos)
+        self.ui.ui.horizontalSlider.blockSignals(True)
         self.ui.ui.horizontalSlider.setValue(self.pos)
+        self.ui.ui.horizontalSlider.blockSignals(False)
     
     def first_view(self):
         '''
@@ -118,8 +116,9 @@ class Analise_Ctrl:
         self.ui.ui.stackedVet.setCurrentIndex(self.pos)
         self.ui.ui.stackedTriang.setCurrentIndex(self.pos)
         self.ui.ui.stackedGPA.setCurrentIndex(self.pos)
+        self.ui.ui.horizontalSlider.blockSignals(True)
         self.ui.ui.horizontalSlider.setValue(self.pos)
-        time.sleep(.10)
+        self.ui.ui.horizontalSlider.blockSignals(False)
                 
     def set_view(self, pos):
         '''
@@ -135,8 +134,12 @@ class Analise_Ctrl:
         self.ui.ui.stackedVet.setCurrentIndex(self.pos)
         self.ui.ui.stackedTriang.setCurrentIndex(self.pos)
         self.ui.ui.stackedGPA.setCurrentIndex(self.pos)
-        self.ui.ui.horizontalSlider.setValue(self.pos)
-        time.sleep(.10)
+        # Only block signals if we're changing the slider value programmatically
+        # and it's different from the current value
+        if self.ui.ui.horizontalSlider.value() != self.pos:
+            self.ui.ui.horizontalSlider.blockSignals(True)
+            self.ui.ui.horizontalSlider.setValue(self.pos)
+            self.ui.ui.horizontalSlider.blockSignals(False)
                 
     def abrir_arquivo(self):
         '''
@@ -145,7 +148,9 @@ class Analise_Ctrl:
         '''
         
         self.figuras_vet = []
+        self.figuras_vet_detail = []
         self.figuras_triang = []
+        self.figuras_triang_detail = []
         self.figuras_GA = []
         self.normalizado = False
         self.matrizes = []
@@ -361,6 +366,7 @@ class Analise_Ctrl:
         miny = -1
         maxy = round(max(self.dy[-1]))
 
+        # Create figure for overview tab
         self.figuras_vet.append(Figure(dpi=120))
         axes = self.figuras_vet[-1].add_subplot(111, aspect='equal')
         q = axes.quiver(self.dx, self.dy, angles='xy', scale=1.0,
@@ -368,6 +374,15 @@ class Analise_Ctrl:
         axes.quiverkey(q, 0, miny - 2, 1, '', coordinates='data')
         axes.set_xlim(minx, len(self.dx[0]) + maxx)
         axes.set_ylim(miny, len(self.dx) + maxy)
+        
+        # Create separate figure for detailed tab
+        self.figuras_vet_detail.append(Figure(dpi=120))
+        axes_detail = self.figuras_vet_detail[-1].add_subplot(111, aspect='equal')
+        q_detail = axes_detail.quiver(self.dx, self.dy, angles='xy', scale=1.0,
+                                scale_units='xy', minshaft=2, minlength=1)
+        axes_detail.quiverkey(q_detail, 0, miny - 2, 1, '', coordinates='data')
+        axes_detail.set_xlim(minx, len(self.dx[0]) + maxx)
+        axes_detail.set_ylim(miny, len(self.dx) + maxy)
         
     def anular(self):
         '''
@@ -419,6 +434,8 @@ class Analise_Ctrl:
 
         x, y = zip(*points)
         t = tri.Triangulation(x, y)
+        
+        # Create figure for overview tab
         self.figuras_triang.append(Figure(dpi=120))
         axes = self.figuras_triang[-1].add_subplot(111, aspect='equal')
         minx = round(min(list(zip(*self.dx))[0])) - 1
@@ -432,6 +449,13 @@ class Analise_Ctrl:
         axes.set_xlim(minx, len(self.dx[0]) + maxx)
         axes.set_ylim(miny, len(self.dx) + maxy)
         axes.triplot(t)
+        
+        # Create separate figure for detailed tab
+        self.figuras_triang_detail.append(Figure(dpi=120))
+        axes_detail = self.figuras_triang_detail[-1].add_subplot(111, aspect='equal')
+        axes_detail.set_xlim(minx, len(self.dx[0]) + maxx)
+        axes_detail.set_ylim(miny, len(self.dx) + maxy)
+        axes_detail.triplot(t)
 
         self.GAs.append((len(t.edges) - len(x)) / len(x))
         
@@ -446,6 +470,7 @@ class Analise_Ctrl:
             
             graph_widget.label.setText("%1.6f" % self.GAs[indice])
             
+            # Use overview figures for the first tab
             widget_vector = FigureWidget(self.figuras_vet[indice])
             widget_vector.setObjectName("widget_vector")
             widget_vector.setParent(graph_widget.groupBox)
@@ -461,7 +486,8 @@ class Analise_Ctrl:
             vect_widget = Detail_widget()
             vect_widget.setup()
             
-            widget_vector_tab = FigureWidget(self.figuras_vet[indice])
+            # Use detail figures for the detailed vector tab
+            widget_vector_tab = FigureWidget(self.figuras_vet_detail[indice])
             widget_vector_tab.setObjectName("widget_vector_tab")
             widget_vector_tab.setParent(vect_widget.groupBox)
             vect_widget.gridLayout_1.addWidget(widget_vector_tab, 0, 0, 1, 1)
@@ -472,7 +498,8 @@ class Analise_Ctrl:
             trian_widget = Detail_widget()
             trian_widget.setup()
             
-            widget_delaunay_tab = FigureWidget(self.figuras_triang[indice])
+            # Use detail figures for the detailed triangulation tab
+            widget_delaunay_tab = FigureWidget(self.figuras_triang_detail[indice])
             widget_delaunay_tab.setObjectName("widget_delaunay_tab")
             widget_delaunay_tab.setParent(trian_widget.groupBox)
             trian_widget.gridLayout_1.addWidget(widget_delaunay_tab, 0, 0, 1, 1)
